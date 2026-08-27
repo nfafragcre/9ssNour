@@ -298,7 +298,6 @@
   <div class="app-container">
     
     <div class="control-panel">
-      <!-- تشغيل الملفات الصوتية الحقيقية -->
       <div class="audio-controls">
         <div class="sound-unit">
           <button class="btn-action" id="rainBtn" onclick="toggleAudio('rain')">🌧️ مطر</button>
@@ -407,15 +406,14 @@
   let currentFontSize = 20;
   let sleepTimerTimeout = null;
 
-  // روابط الصوتيات الحقيقية المباشرة والمجانية من خوادم عالمية مشهورة
+  // روابط MP3 مباشرة ومضمونة للعمل على كافة المتصفحات والهواتف
   const audioTracks = {
-    rain: new Audio('https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg'),
-    thunder: new Audio('https://actions.google.com/sounds/v1/weather/thunder_crack.ogg'),
-    wind: new Audio('https://actions.google.com/sounds/v1/weather/wind_synth.ogg'),
-    fire: new Audio('https://actions.google.com/sounds/v1/ambiences/fireplace.ogg')
+    rain: new Audio('https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3'),
+    thunder: new Audio('https://assets.mixkit.co/active_storage/sfx/1271/1271-preview.mp3'),
+    wind: new Audio('https://assets.mixkit.co/active_storage/sfx/2514/2514-preview.mp3'),
+    fire: new Audio('https://assets.mixkit.co/active_storage/sfx/2522/2522-preview.mp3')
   };
 
-  // ضبط التكرار لجميع الأصوات لتستمر دون توقف
   Object.keys(audioTracks).forEach(key => {
     audioTracks[key].loop = true;
   });
@@ -488,7 +486,6 @@
     }
   }
 
-  // التحكم بتمكين وإيقاف الملفات الصوتية الحقيقية
   function toggleAudio(type) {
     const audio = audioTracks[type];
     const btn = document.getElementById(`${type}Btn`);
@@ -500,7 +497,7 @@
         btn.classList.add('active');
         if (type === 'thunder') triggerLightningFlash();
       }).catch(err => {
-        alert("يرجى التفاعل مع الصفحة أولاً لتشغيل الصوت بشكل طبيعي.");
+        console.error(err);
       });
     } else {
       audio.pause();
