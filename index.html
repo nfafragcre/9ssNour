@@ -153,7 +153,7 @@
 
   <div class="container">
     <div class="top-bar">
-      <button class="icon-btn" id="rainBtn" onclick="toggleRain()">🌧️ المطر: مغلق</button>
+      <button class="icon-btn" id="rainBtn" onclick="toggleRain()">⚡ مطر وبرق: مغلق</button>
       <button class="icon-btn" onclick="toggleSuperDark()">🕶️ وضع الظلام</button>
       <div>
         <button class="icon-btn" onclick="adjustFont(1)">A+</button>
@@ -176,6 +176,9 @@
 
     <button class="btn btn-main" onclick="loadRandomStory()">قصة جديدة 📖</button>
   </div>
+
+  <!-- ملف صوت طبيعي حقيقي لمطر ورعد هادئ مسجل بدقة عالية -->
+  <audio id="rainAudio" loop preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2516/2516-preview.mp3"></audio>
 
 <script>
   const stories = [
@@ -244,11 +247,7 @@
   let currentStoryIndex = 0;
   let currentPageIndex = 0;
   let currentFontSize = 22;
-  
-  // مولد صوت المطر برمجيًا (Web Audio API)
-  let audioCtx = null;
-  let isRainPlaying = false;
-  let noiseNode = null;
+  const audio = document.getElementById('rainAudio');
 
   function init() {
     const savedStory = localStorage.getItem('night_story_id');
@@ -309,48 +308,20 @@
     document.body.classList.toggle('super-dark');
   }
 
-  // إنشاء صوت المطر عبر Web Audio API ليعمل على كافة الهواتف دون مشاكل
   function toggleRain() {
     const btn = document.getElementById('rainBtn');
-    if (!isRainPlaying) {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      
-      const bufferSize = audioCtx.sampleRate * 2;
-      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
-      }
-
-      noiseNode = audioCtx.createBufferSource();
-      noiseNode.buffer = noiseBuffer;
-      noiseNode.loop = true;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 800; // تنعيم الصوت ليشبه المطر
-
-      const gainNode = audioCtx.createGain();
-      gainNode.gain.value = 0.15; // مستوى صوت هادئ
-
-      noiseNode.connect(filter);
-      filter.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-
-      noiseNode.start();
-      isRainPlaying = true;
-      btn.innerText = "🌧️ المطر: يعفمل";
-      btn.style.background = "var(--accent-gold)";
-      btn.style.color = "#000";
+    if (audio.paused) {
+      audio.volume = 0.4; // درجة صوت هادئة ومريحة
+      audio.play().then(() => {
+        btn.innerText = "⚡ مطر وبرق: يعمل";
+        btn.style.background = "var(--accent-gold)";
+        btn.style.color = "#000";
+      }).catch(err => {
+        console.log("Audio play blocked by browser:", err);
+      });
     } else {
-      if (noiseNode) {
-        noiseNode.stop();
-        noiseNode.disconnect();
-      }
-      isRainPlaying = false;
-      btn.innerText = "🌧️ المطر: مغلق";
+      audio.pause();
+      btn.innerText = "⚡ مطر وبرق: مغلق";
       btn.style.background = "rgba(251, 191, 36, 0.1)";
       btn.style.color = "var(--accent-gold)";
     }
