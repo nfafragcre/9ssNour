@@ -40,7 +40,6 @@
       position: relative;
     }
 
-    /* حاوية العناصر المتساقطة */
     .sky-container {
       position: fixed;
       top: 0;
@@ -62,16 +61,10 @@
     }
 
     @keyframes fall {
-      0% {
-        transform: translateY(-30px) rotate(0deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(-30px) rotate(0deg); opacity: 0; }
       20% { opacity: 0.8; }
       80% { opacity: 0.8; }
-      100% {
-        transform: translateY(105vh) rotate(360deg);
-        opacity: 0;
-      }
+      100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
     }
 
     .container {
@@ -183,7 +176,6 @@
 </head>
 <body>
 
-  <!-- حاوية النجوم والأقمار المتساقطة -->
   <div class="sky-container" id="skyContainer"></div>
 
   <div class="container">
@@ -211,9 +203,6 @@
 
     <button class="btn btn-main" onclick="loadRandomStory()">قصة جديدة 📖</button>
   </div>
-
-  <!-- رابط صوتي مدمج لمطر طبيعي غزير مع أصوات رعد وبرق بعيدة وهادئة -->
-  <audio id="rainAudio" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6591b7d3.mp3?filename=thunderstorm-ambient-112108.mp3"></audio>
 
 <script>
   const stories = [
@@ -274,7 +263,7 @@
         "ورا جبال الضباب، كان هناك مرج واسع تتفتح فيه أزهار وردية لا تذبل أبداً. وكانت تعيش هناك أميرة تحب السير حافية القدمين على الأعشاب الندية كل مساء.",
         "كانت تعزف على قيثارة صغيرة ألحاناً تشبه صوت النسمات الصيفية. وكانت الحيوانات الصغيرة تجمع حولها لتستمع إلى عزفها وتستعد للنوم.",
         "وفي إحدى الليالي، جاء أمير مسافر تعب من رحلته الطويلة. عندما سمع عزفها، استلقى على الأعشاب الخضراء ووجد لأول مرة منذ سنوات الراحة التي كان يبحث عنها.",
-        "قال لها قبل أن غفو: 'مملكتكِ ليست فيها قلاع أو حراس، لكنها أجمل مكان رأيته'. ابتسمت الأميرة وواصلت العزف حتى غطت النجوم السماء كلها بسلام."
+        "قال لها قبل أن يغفو: 'مملكتكِ ليست فيها قلاع أو حراس، لكنها أجمل مكان رأيته'. ابتسمت الأميرة وواصلت العزف حتى غطت النجوم السماء كلها بسلام."
       ]
     }
   ];
@@ -282,7 +271,12 @@
   let currentStoryIndex = 0;
   let currentPageIndex = 0;
   let currentFontSize = 22;
-  const audio = document.getElementById('rainAudio');
+
+  // محرك الصوت الداخلي (محاكاة المطر والرعد بدون سيرفر خارجي)
+  let audioCtx = null;
+  let rainNode = null;
+  let isRainPlaying = false;
+  let thunderInterval = null;
 
   function init() {
     const savedStory = localStorage.getItem('night_story_id');
@@ -299,13 +293,10 @@
     createFallingSky();
   }
 
-  // توليد النجوم والأقمار المتساقطة
   function createFallingSky() {
     const sky = document.getElementById('skyContainer');
     const symbols = ['🌙', '⭐', '✨', '💫'];
-    const count = 18;
-
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 16; i++) {
       const item = document.createElement('div');
       item.className = 'falling-item';
       item.innerText = symbols[Math.floor(Math.random() * symbols.length)];
@@ -315,6 +306,92 @@
       item.style.animationDelay = `${Math.random() * 5}s`;
       sky.appendChild(item);
     }
+  }
+
+  function toggleRain() {
+    const btn = document.getElementById('rainBtn');
+
+    if (!isRainPlaying) {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      // صوت مطر طبيعي مهدئ (Pink Noise Filtered)
+      const bufferSize = audioCtx.sampleRate * 2;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+
+      for (let i = 0; i < bufferSize; i++) {
+        let white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+        output[i] *= 0.012; // مستوى صوت ناعم جداً للمطر
+        b6 = white * 0.115926;
+      }
+
+      rainNode = audioCtx.createBufferSource();
+      rainNode.buffer = noiseBuffer;
+      rainNode.loop = true;
+
+      // فلتر صوت ناعم ليمنع أي تشويش
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 800;
+
+      rainNode.connect(filter);
+      filter.connect(audioCtx.destination);
+      rainNode.start();
+
+      // تشغيل ضربات رعد/برق بعيدة وهادئة كل 12 إلى 20 ثانية
+      thunderInterval = setInterval(() => {
+        playQuietThunder();
+      }, 14000);
+
+      // تشغيل ضربة رعد فورية خفيفة للتأكيد
+      playQuietThunder();
+
+      btn.innerText = "⚡ مطر وبرق: يعمل";
+      btn.style.background = "var(--accent-gold)";
+      btn.style.color = "#000";
+      isRainPlaying = true;
+    } else {
+      if (rainNode) rainNode.stop();
+      if (thunderInterval) clearInterval(thunderInterval);
+      btn.innerText = "⚡ مطر وبرق: مغلق";
+      btn.style.background = "rgba(251, 191, 36, 0.1)";
+      btn.style.color = "var(--accent-gold)";
+      isRainPlaying = false;
+    }
+  }
+
+  // دالة إنشاء صوت رعد هادئ وعميق من بعيد
+  function playQuietThunder() {
+    if (!audioCtx || !isRainPlaying) return;
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(60, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 2.5);
+
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime); // صوت منخفض وغير مفزع
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 2.5);
   }
 
   function loadRandomStory() {
@@ -360,23 +437,6 @@
 
   function toggleSuperDark() {
     document.body.classList.toggle('super-dark');
-  }
-
-  function toggleRain() {
-    const btn = document.getElementById('rainBtn');
-    if (audio.paused) {
-      audio.volume = 0.35;
-      audio.play().then(() => {
-        btn.innerText = "⚡ مطر وبرق: يعمل";
-        btn.style.background = "var(--accent-gold)";
-        btn.style.color = "#000";
-      }).catch(err => console.log("Audio blocked", err));
-    } else {
-      audio.pause();
-      btn.innerText = "⚡ مطر وبرق: مغلق";
-      btn.style.background = "rgba(251, 191, 36, 0.1)";
-      btn.style.color = "var(--accent-gold)";
-    }
   }
 
   window.onload = init;
