@@ -43,18 +43,16 @@
       position: relative;
     }
 
-    /* وميض البرق */
     .lightning-flash {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.15);
       pointer-events: none;
       z-index: 999;
       opacity: 0;
       transition: opacity 0.08s ease-out;
     }
 
-    /* خلفية السماء والنجوم */
     .sky-container {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -80,14 +78,13 @@
       border: 1px solid var(--border-color);
       border-radius: 24px;
       padding: 30px;
-      max-width: 800px;
+      max-width: 850px;
       width: 100%;
       box-shadow: 0 20px 50px rgba(0,0,0,0.8);
       position: relative;
       z-index: 10;
     }
 
-    /* شريط التحرر العلوي */
     .control-panel {
       display: flex;
       justify-content: space-between;
@@ -101,7 +98,7 @@
 
     .audio-controls {
       display: flex;
-      gap: 15px;
+      gap: 10px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -109,15 +106,15 @@
     .sound-unit {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: rgba(0, 0, 0, 0.3);
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 12px;
       border: 1px solid var(--border-color);
     }
 
     .volume-slider {
-      width: 65px;
+      width: 55px;
       accent-color: var(--accent-gold);
       cursor: pointer;
     }
@@ -126,7 +123,7 @@
       background: rgba(245, 158, 11, 0.1);
       border: 1px solid var(--border-color);
       color: var(--accent-gold);
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 10px;
       font-size: 13px;
       font-weight: 700;
@@ -144,7 +141,6 @@
       background: var(--card-bg);
     }
 
-    /* شبكة الكتب */
     .books-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -187,10 +183,7 @@
     .book-title { font-size: 17px; font-weight: 700; color: var(--accent-gold); }
     .book-author { font-size: 12px; opacity: 0.6; }
 
-    /* قارئ الكتاب */
-    .reader-view {
-      display: none;
-    }
+    .reader-view { display: none; }
 
     .book-frame {
       background: var(--book-paper);
@@ -299,9 +292,7 @@
       transition: background 0.2s;
     }
 
-    .btn-return:hover {
-      background: rgba(255,255,255,0.05);
-    }
+    .btn-return:hover { background: rgba(255,255,255,0.05); }
   </style>
 </head>
 <body>
@@ -311,17 +302,27 @@
 
   <div class="app-container">
     
-    <!-- شريط التحكم الصوتي والخيارات -->
     <div class="control-panel">
+      <!-- الأصوات المحيطية الاربعة (الخيار 4) -->
       <div class="audio-controls">
         <div class="sound-unit">
-          <button class="btn-action" id="rainBtn" onclick="toggleRain()">🌧️ المطر</button>
-          <input type="range" class="volume-slider" id="rainVol" min="0" max="1" step="0.05" value="0.4" oninput="updateVolume()">
+          <button class="btn-action" id="rainBtn" onclick="toggleRain()">🌧️ مطر</button>
+          <input type="range" class="volume-slider" id="rainVol" min="0" max="1" step="0.05" value="0.4" oninput="updateVolumes()">
         </div>
 
         <div class="sound-unit">
-          <button class="btn-action" id="thunderBtn" onclick="toggleThunder()">⚡ البرق</button>
-          <input type="range" class="volume-slider" id="thunderVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolume()">
+          <button class="btn-action" id="thunderBtn" onclick="toggleThunder()">⚡ رعد</button>
+          <input type="range" class="volume-slider" id="thunderVol" min="0" max="1" step="0.05" value="0.7" oninput="updateVolumes()">
+        </div>
+
+        <div class="sound-unit">
+          <button class="btn-action" id="windBtn" onclick="toggleWind()">🍃 رياح</button>
+          <input type="range" class="volume-slider" id="windVol" min="0" max="1" step="0.05" value="0.3" oninput="updateVolumes()">
+        </div>
+
+        <div class="sound-unit">
+          <button class="btn-action" id="fireBtn" onclick="toggleFire()">🪵 موقد</button>
+          <input type="range" class="volume-slider" id="fireVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolumes()">
         </div>
       </div>
 
@@ -333,20 +334,18 @@
           <option value="60">60 دقيقة</option>
         </select>
 
-        <button class="btn-action" onclick="toggleSuperDark()">🕶️ الوضع الداكن</button>
+        <button class="btn-action" onclick="toggleSuperDark()">🕶️ داكن</button>
         <button class="btn-action" onclick="adjustFont(1)">A+</button>
         <button class="btn-action" onclick="adjustFont(-1)">A-</button>
       </div>
     </div>
 
-    <!-- واجهة عرض شبكة الكتب -->
     <div id="booksView">
       <h2 style="color: var(--accent-gold); margin-bottom: 8px; font-weight: 700;">المكتبة الليلية 📚</h2>
-      <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">اختر كتاباً من أمهات الروايات والأدب العالمي للقراءة الهادئة</p>
+      <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">اختر كتاباً للقراءة مع الخيارات الصوتية الأربعة</p>
       <div class="books-grid" id="booksContainer"></div>
     </div>
 
-    <!-- واجهة القراءة -->
     <div id="readerView" class="reader-view">
       <div class="progress-bar-container">
         <div class="progress-bar-fill" id="progressFill"></div>
@@ -377,7 +376,6 @@
   </div>
 
 <script>
-  // المكتبة الأدبية الموسعة (نصوص كاملة ومطولة مقسمة لصفحات)
   const library = [
     {
       id: 1,
@@ -387,8 +385,7 @@
       pages: [
         "طلب مني الأمير الصغير رسم خروف. ولما لم أكن قد رسمت في حياتي سوى ثعبان البوا من الخارج ومن الداخل، أعدت رسم إحدى اللوحتين اللتين كنت أتقنهما: ثعبان البوا المغلق. وصدمت عندما سمعت الفتى الصغير يقول: 'لا! لا! لا أريد فيلاً داخل ثعبان بوا! الثعبان خطير جداً، والفيل ضخم للغاية. بيتي صغير جداً، وأنا بحاجة إلى خروف. ارسم لي خروفاً'. وهكذا قمت برسم الخروف. نظر إليه باهتمام ثم قال: 'لا، هذا مريض جداً. اصنع لي خروفاً آخر'. رسمت خروفاً جديداً، فابتسم صديقي الصغير برقة وتسامح قادماً للقول: 'أنت ترى بنفسك... هذا ليس خروفاً، إنه كبش له قرون...'.",
         "عدت إلى الرسم من جديد، لكنه رفضه كسابقيه: 'هذا كبير السن، وأنا أريد خروفاً يعيش طويلاً'. ولما نفد صبري، وكان عليّ أن أبدأ في تفكيك محرك طائرتي المعطل في الصحراء، خربشت هذا الرسم على السريع، وقلت له: 'هذا هو الصندوق. والخروف الذي تطلبه موجود بالداخل'. وكم كانت مفاجأتي عظيمة عندما رأيت وجه قاضيي الصغير يضيء بابتهاج: 'هذا بالضبط ما كنت أريده! هل تعتقد أن هذا الخروف يحتاج إلى الكثير من العشب؟ لأن بيتي صغير جداً...'. قال ذلك لأنه كان يملك كوكباً لا يتعدى حجمه حجم بيت صغير.",
-        "علمت مع الوقت أن كوكبه الأصلي هو الكويكب ب-612. هذا الكويكب لم يرَه بالمناظير سوى فلكي تركي عام 1909، ولم يصدقه أحد آنذاك بسبب زيه. لكن عندما أجبرهم حاكم مستبد على ارتداء الأزياء الأوربية، أعاد الفلكي تقديم إثباته عام 1920 برداء أنيق، فوافق الجميع على اكتشافه. إن الكبار يحبون الأرقام. عندما تحدثهم عن صديق جديد، لا يسألونك أبداً عن الأهم: لا يسألون عن نبرة صوته، أو ألعابه المفضلة، أو إن كان يجمع الفراشات، بل يسألون: كم عمره؟ كم أخاً له؟ كم وزنه؟ وكم يكسب أبوه؟ وحينها فقط يعتقدون أنهم عرفوه.",
-        "قال لي الأمير الصغير في يومه الثالث: 'إن الباوباب ليست أشجاراً ضخمة، بل تبدأ صغيرة جداً قبل أن تكبر'. هذا صحيح، ولكن لماذا تريد لخروفك أن يأكل شجيرات الباوباب الصغيرة؟ أجابني وكأنه يوضح أمراً بديهياً: 'أوه، يلا العجب!'. وكان عليّ بذل جهد عقلي كبير لأفهم تلك المشكلة بمفردي. إن أرض كوكب الأمير الصغير تحتوي على بذور جيدة وبذور خبيثة. وبذور الباوباب تتغلغل في التربة، وإذا لم تقتلع شجيرة الباوباب فور تمييزها عن النبتة الصالحة، فإنها تتضخم وتثقب الكوكب بجذورها حتى ينفجر. إنها مسألة نظام وانضباط."
+        "علمت مع الوقت أن كوكبه الأصلي هو الكويكب ب-612. هذا الكويكب لم يرَه بالمناظير سوى فلكي تركي عام 1909، ولم يصدقه أحد آنذاك بسبب زيه. لكن عندما أجبرهم حاكم مستبد على ارتداء الأزياء الأوربية، أعاد الفلكي تقديم إثباته عام 1920 برداء أنيق، فوافق الجميع على اكتشافه. إن الكبار يحبون الأرقام. عندما تحدثهم عن صديق جديد، لا يسألونك أبداً عن الأهم: لا يسألون عن نبرة صوته، أو ألعابه المفضلة، أو إن كان يجمع الفراشات، بل يسألون: كم عمره؟ كم أخاً له؟ كم وزنه؟ وكم يكسب أبوه؟ وحينها فقط يعتقدون أنهم عرفوه."
       ]
     },
     {
@@ -398,8 +395,7 @@
       emoji: "📜",
       pages: [
         "المصطفى، المختار والحبيب، الذي كان فجراً لنهاره الخاص، كان قد انتظر اثنتي عشرة سنة في مدينة أورفاليس مجيء سفينته التي ترجعه إلى الجزيرة التي ولد فيها. وفي السنة الاثنتي عشرة، في اليوم الثاني عشر من أيلول، حصاد الشهر، صعد إلى التل خارج أسوار المدينة وتطلع نحو البحر؛ فرأى سفينته تقبل مع الضباب. حينئذ انفتحت أبواب قلبه، وطارت فرحته بعيداً فوق البحر. وأغمض عينيه وصلى في هدوء روحه. ولكنه وهو نازل من التل، اعتراه حزن، وقال في قلبه: كيف أرحل في سلام ودون ألم؟ لا، لن أخرج من هذه المدينة دون أن تجرح روحي.",
-        "ثم قالت له المظلومة: حدثنا عن المحبة. فرفع رأسه ونظر إلى الشعب، وساد الهدوء عليهم. وبصوت عظيم قال: إذا أومأت إليكم المحبة فاتبعوها، وإن كانت مسالكها صعبة ووعرة. وإذا ضمتكم بجناحيها فاستسلموا لها، وإن جرحكم السيف المختفي بين ريشها. وإذا كلمتكم فصدقوها، وإن عبث صوتها بأحلامكم كما تعبث الريح الشمالية بالحديقة. المحبة لا تعطي إلا نفسها، ولا تأخذ إلا من نفسها. المحبة لا تملك، ولا تستملك، لأن المحبة كافية للمحبة. وحين تحبون، لا تقولوا: الله في قلبي، بل قولوا الأفضل: أنا في قلب الله.",
-        "ثم تقدمت امرأة تحمل طفلاً على صدرها وقالت: حدثنا عن الأولاد. فقال: أولادكم ليسوا لكم. إنهم أبناء وبنات الحياة المشتاقة إلى نفسها. بكم يأتون إلى العالم ولكن ليس منكم، ومع أنهم يعيشون معكم فهم لا يعودون إليكم. أنتم تمنحونهم حبكم ولكن ليس أفكاركم، لأن لهم أفكارهم الخاصة. أنتم تستطيعون أن تأووا أجسادهم لا أرواحهم، لأن أرواحهم تسكن في بيت الغد، الذي لا تستطيعون زيارته ولا حتى في أحلامكم. أنتم الأقواس التي منها ينطلق أبناؤكم كسهام حية. الرامي يرى العلامة على طريق اللانهائية، فيحنيكم بقوته لكي تنطلق سهامه سريعة بعيدة."
+        "ثم قالت له المظلومة: حدثنا عن المحبة. فرفع رأسه ونظر إلى الشعب، وساد الهدوء عليهم. وبصوت عظيم قال: إذا أومأت إليكم المحبة فاتبعوها، وإن كانت مسالكها صعبة ووعرة. وإذا ضمتكم بجناحيها فاستسلموا لها، وإن جرحكم السيف المختفي بين ريشها. وإذا كلمتكم فصدقوها، وإن عبث صوتها بأحلامكم كما تعبث الريح الشمالية بالحديقة. المحبة لا تعطي إلا نفسها، ولا تأخذ إلا من نفسها. المحبة لا تملك، ولا تستملك، لأن المحبة كافية للمحبة."
       ]
     },
     {
@@ -408,20 +404,8 @@
       author: "إرنست همنغواي",
       emoji: "⛵",
       pages: [
-        "كان شيخاً يصطاد السمك بمفرده في قارب صغير بـ 'جلف ستريم'، ومضى عليه الآن أربعة وثمانون يوماً دون أن يظفر بسمكة واحدة. وفي الأربعين يوماً الأولى، كان يرافقه صبي. ولكن بعد أربعين يوماً بلا سمك، قال أبوا الصبي لولدهما إن الشيخ أصبح بلا شك 'سالاو'، وهي أتعس صور الحظ السيء، وأمراه بأن يخرج في قارب آخر استطاع أن يصطاد ثلاث سمكات ممتازة في الأسبوع الأول. وكان يحزن الصبي أن يرى الشيخ عائداً كل يوم بقاربه فارغاً، فكان ينزل دائماً لليساعده في حمل حبال الصيد أو المخطاف والشراع الملفوف حول الصارية.",
-        "كان الشراع مرقعاً بأكياس الطحين الخالية، وكان يبدو كأنه علم هزيمة دائمة. لكن الشيخ كان نحيفاً وضامراً، مع تجاعيد عميقة في مؤخرة عنقه. وكانت البقع البنية لسرطان الجلد الخفيف، الذي تسببه الشمس المنعكسة على البحر الاستوائي، تتناثر على وجنتيه. وكانت يداه تحملان ندوباً عميقة من أثر معالجة الأسماك الثقيلة بالحبال. ولكن لم تكن أي من هذه الندوب حديثة، بل كانت قديمة كالأخاديد في صحراء لا أسماك فيها. كل شيء فيه كان قديماً باستثناء عينيه؛ فقد كانتا بالميل نفسه للبحر، ومرحتين ولا تعرفان الهزيمة.",
-        "قال الشيخ للصبي عندما جافاهما الحظ: 'غداً يوم جديد. واليوم الخمسون يمنح الحظ في كثير من الأحيان'. طاف البحر بعينيه الواسعتين وهو يجذف بهدوء. كان يعشق البحر ويشعر أنه أمه أو أخته، وكان يتحدث مع الأسماك ومع الطيور البحرية كأنها عائلته الوحيدة. الشمس أشرقت حارقة، وفي المياه المظلمة على عمق أربعمائة قامة، شعر الشيخ بضربة خفيفة وحذرة على خط الصيد الهابط في الأعماق. ابتسم وقال في سره: 'إنها سمكة كبيرة... إنها تعبث بالطعمة على عمق ألف قدم'."
-      ]
-    },
-    {
-      id: 4,
-      title: "رسائل إلى شاعر شاب",
-      author: "راينر ماريا ريلكه",
-      emoji: "✉️",
-      pages: [
-        "تسألني إن كانت قصائدك جيدة. تسألني أنا، وقد سألت قبلي آخرين. ترسلها إلى المجلاّت، وتقارنها بقصائد أخرى، وتضطرب حين ترفض هيئات التحرير محاولاتك. الآن، وبما أنك سمحت لي بنصحك، أرجوك أن تتكف عن كل ذلك. إنك تنظر إلى الخارج، وهذا أكثر ما ينبغي عليك تجنبه الآن. لا أحد يستطيع أن ينصحك أو يساعدك، لا أحد. هناك طريق واحد فقط: ادخل في أعماق نفسك. ابحث عن السبب الذي يدعوك إلى الكتابة؛ افحص ما إذا كانت جذوره تمتد في أعمق أركان قلبك، واعترف لنفسك بما إذا كنت ستضطر إلى الموت إذا حُظر عليك الكتابة.",
-        "إذا كانت الإجابة بـ 'نعم' حازمة وصريحة، وإذا كان بإمكانك أن تواجه هذا السؤال الشديد بـ 'يجب عليّ' بسيطة وجليلة، فابنِ حياتك وفقاً لهذا الضرورة. إن حياتك، حتى في أكثر لحظاتها قلقاً وضآلة، يجب أن تصبح علامة وشاهداً على هذا الدافع. ثم اقترب من الطبيعة، وحاول أن تقول، كما لو كنت أول إنسان على وجه الأرض، ما تراه وما تعيشه وما تحبه وما تفقده. لا تكتب قصائد حب، تجنب في البداية الأشكال الشائعة والمبتذلة؛ فهي الأصعب، إذ تتطلب قوة ناضجة وعظيمة لتقديم شيء خاص بك في مجال توجد فيه تقاليد ممتازة بكثرة.",
-        "عش الأسئلة الآن. ربما تتدرج تدريجياً، دون أن تلاحظ، في يوم بعيد، لتعيش في قلب الإجابة. إن العزلة يا صديقي شيء عظيم، ولكنها ليست سهلة. إنها صعبة، ولكن كون الشيء صعباً يجب أن يكون سبباً إضافياً لنا لفعله. أن تحب هو أيضاً شيء جيد، فالأمر متطلب. إن الحب من إنسان لإنسان هو ربما أصعب ما كُلفنا به، إنه الاختبار الأقصى، والعمل الذي تتهيأ له كل الأعمال الأخرى."
+        "كان شيخاً يصطاد السمك بمفرده في قارب صغير بـ 'جلف ستريم'، ومضى عليه الآن أربعة وثمانون يوماً دون أن يظفر بسمكة واحدة. وفي الأربعين يوماً الأولى، كان يرافقه صبي. ولكن بعد أربعين يوماً بلا سمك، قال أبوا الصبي لولدهما إن الشيخ أصبح بلا شك 'سالاو'، وهي أتعس صور الحظ السيء، وأمراه بأن يخرج في قارب آخر استطاع أن يصطاد ثلاث سمكات ممتازة في الأسبوع الأول. وكان يحزن الصبي أن يرى الشيخ عائداً كل يوم بقاربه فارغاً، فكان ينزل دائماً لليساعده في حمل حبال الصيد.",
+        "كان الشراع مرقعاً بأكياس الطحين الخالية، وكان يبدو كأنه علم هزيمة دائمة. لكن الشيخ كان نحيفاً وضامراً، مع تجاعيد عميقة في مؤخرة عنقه. وكانت البقع البنية لسرطان الجلد الخفيف، الذي تسببه الشمس المنعكسة على البحر الاستوائي، تتناثر على وجنتيه. وكانت يداه تحملان ندوباً عميقة من أثر معالجة الأسماك الثقيلة بالحبال. كل شيء فيه كان قديماً باستثناء عينيه؛ فقد كانتا بالميل نفسه للبحر، ومرحتين ولا تعرفان الهزيمة."
       ]
     }
   ];
@@ -431,11 +415,12 @@
   let currentFontSize = 20;
 
   let audioCtx = null;
-  let isRainActive = false;
-  let isThunderActive = false;
-  let rainSource = null;
-  let rainGainNode = null;
-  let thunderInterval = null;
+  
+  // الحالات ومحركات الصوت
+  let isRainActive = false, rainSource = null, rainGain = null;
+  let isThunderActive = false, thunderTimeout = null;
+  let isWindActive = false, windSource = null, windGain = null;
+  let isFireActive = false, fireSource = null, fireGain = null;
   let sleepTimerTimeout = null;
 
   function init() {
@@ -506,7 +491,6 @@
     }
   }
 
-  /* AudioContext ومحاكاة الصوت */
   function initAudioContext() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -516,34 +500,36 @@
     }
   }
 
+  function createWhiteNoiseBuffer() {
+    const bufferSize = audioCtx.sampleRate * 2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    return buffer;
+  }
+
+  // 1. صوت المطر
   function toggleRain() {
     initAudioContext();
     const btn = document.getElementById('rainBtn');
-
     if (!isRainActive) {
-      const bufferSize = audioCtx.sampleRate * 2;
-      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-
-      for (let i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
-      }
-
       rainSource = audioCtx.createBufferSource();
-      rainSource.buffer = noiseBuffer;
+      rainSource.buffer = createWhiteNoiseBuffer();
       rainSource.loop = true;
 
-      const lowpass = audioCtx.createBiquadFilter();
-      lowpass.type = 'lowpass';
-      lowpass.frequency.setValueAtTime(420, audioCtx.currentTime);
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 500;
 
-      rainGainNode = audioCtx.createGain();
+      rainGain = audioCtx.createGain();
       const vol = document.getElementById('rainVol').value;
-      rainGainNode.gain.setValueAtTime(vol * 0.08, audioCtx.currentTime);
+      rainGain.gain.setValueAtTime(vol * 0.1, audioCtx.currentTime);
 
-      rainSource.connect(lowpass);
-      lowpass.connect(rainGainNode);
-      rainGainNode.connect(audioCtx.destination);
+      rainSource.connect(filter);
+      filter.connect(rainGain);
+      rainGain.connect(audioCtx.destination);
 
       rainSource.start();
       isRainActive = true;
@@ -555,65 +541,161 @@
     }
   }
 
+  // 2. إصلاح الرعد المطور (سماع الانفجار + الحشرجة)
   function toggleThunder() {
     initAudioContext();
     const btn = document.getElementById('thunderBtn');
-    
     if (!isThunderActive) {
       isThunderActive = true;
       btn.classList.add('active');
-
-      playSoftThunder();
-      thunderInterval = setInterval(playSoftThunder, 10000);
+      scheduleNextThunder();
     } else {
       isThunderActive = false;
-      if (thunderInterval) clearInterval(thunderInterval);
+      if (thunderTimeout) clearTimeout(thunderTimeout);
       btn.classList.remove('active');
     }
   }
 
-  function updateVolume() {
-    if (rainGainNode && isRainActive) {
-      const vol = document.getElementById('rainVol').value;
-      rainGainNode.gain.setValueAtTime(vol * 0.08, audioCtx.currentTime);
+  function scheduleNextThunder() {
+    if (!isThunderActive) return;
+    playRealThunder();
+    const nextTime = Math.floor(Math.random() * 7000) + 6000; // بين 6 و 13 ثانية
+    thunderTimeout = setTimeout(scheduleNextThunder, nextTime);
+  }
+
+  function playRealThunder() {
+    if (!audioCtx || !isThunderActive) return;
+
+    triggerLightningFlash();
+
+    const now = audioCtx.currentTime;
+    const vol = parseFloat(document.getElementById('thunderVol').value);
+
+    // هزة التردد المنخفض
+    const osc = audioCtx.createOscillator();
+    const oscGain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(120, now);
+    osc.frequency.exponentialRampToValueAtTime(30, now + 2.5);
+
+    oscGain.gain.setValueAtTime(0.01, now);
+    oscGain.gain.linearRampToValueAtTime(0.6 * vol, now + 0.15);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+
+    osc.connect(oscGain);
+    oscGain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 2.5);
+
+    // صوت الحشرجة العالي (Noise)
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = createWhiteNoiseBuffer();
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(400, now);
+    filter.frequency.linearRampToValueAtTime(100, now + 2.0);
+
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.setValueAtTime(0.01, now);
+    noiseGain.gain.linearRampToValueAtTime(0.4 * vol, now + 0.1);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(audioCtx.destination);
+
+    noise.start(now);
+    noise.stop(now + 2.0);
+  }
+
+  // 3. صوت الرياح (خيارات إضافية)
+  function toggleWind() {
+    initAudioContext();
+    const btn = document.getElementById('windBtn');
+    if (!isWindActive) {
+      windSource = audioCtx.createBufferSource();
+      windSource.buffer = createWhiteNoiseBuffer();
+      windSource.loop = true;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 300;
+      filter.Q.value = 3.0;
+
+      // تحريك التردد لإعطاء إحساس هبوب الرياح
+      setInterval(() => {
+        if (isWindActive && audioCtx) {
+          filter.frequency.setTargetAtTime(200 + Math.random() * 300, audioCtx.currentTime, 1.5);
+        }
+      }, 2000);
+
+      windGain = audioCtx.createGain();
+      const vol = document.getElementById('windVol').value;
+      windGain.gain.setValueAtTime(vol * 0.15, audioCtx.currentTime);
+
+      windSource.connect(filter);
+      filter.connect(windGain);
+      windGain.connect(audioCtx.destination);
+
+      windSource.start();
+      isWindActive = true;
+      btn.classList.add('active');
+    } else {
+      if (windSource) windSource.stop();
+      isWindActive = false;
+      btn.classList.remove('active');
+    }
+  }
+
+  // 4. صوت الموقد والنار (خيارات إضافية)
+  function toggleFire() {
+    initAudioContext();
+    const btn = document.getElementById('fireBtn');
+    if (!isFireActive) {
+      fireSource = audioCtx.createBufferSource();
+      fireSource.buffer = createWhiteNoiseBuffer();
+      fireSource.loop = true;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1000;
+      filter.Q.value = 1.0;
+
+      fireGain = audioCtx.createGain();
+      const vol = document.getElementById('fireVol').value;
+      fireGain.gain.setValueAtTime(vol * 0.05, audioCtx.currentTime);
+
+      fireSource.connect(filter);
+      filter.connect(fireGain);
+      fireGain.connect(audioCtx.destination);
+
+      fireSource.start();
+      isFireActive = true;
+      btn.classList.add('active');
+    } else {
+      if (fireSource) fireSource.stop();
+      isFireActive = false;
+      btn.classList.remove('active');
+    }
+  }
+
+  function updateVolumes() {
+    if (rainGain && isRainActive) {
+      rainGain.gain.setValueAtTime(document.getElementById('rainVol').value * 0.1, audioCtx.currentTime);
+    }
+    if (windGain && isWindActive) {
+      windGain.gain.setValueAtTime(document.getElementById('windVol').value * 0.15, audioCtx.currentTime);
+    }
+    if (fireGain && isFireActive) {
+      fireGain.gain.setValueAtTime(document.getElementById('fireVol').value * 0.05, audioCtx.currentTime);
     }
   }
 
   function triggerLightningFlash() {
     const flash = document.getElementById('flash');
     flash.style.opacity = '1';
-    setTimeout(() => { flash.style.opacity = '0'; }, 100);
-  }
-
-  function playSoftThunder() {
-    if (!audioCtx || !isThunderActive) return;
-
-    triggerLightningFlash();
-
-    const now = audioCtx.currentTime;
-    const masterVol = document.getElementById('thunderVol').value;
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const filter = audioCtx.createBiquadFilter();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(90, now);
-    osc.frequency.exponentialRampToValueAtTime(25, now + 2.2);
-
-    filter.type = 'lowpass';
-    filter.frequency.value = 200;
-
-    gain.gain.setValueAtTime(0.01, now);
-    gain.gain.linearRampToValueAtTime(0.3 * masterVol, now + 0.1);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start(now);
-    osc.stop(now + 2.2);
+    setTimeout(() => { flash.style.opacity = '0'; }, 120);
   }
 
   function setSleepTimer() {
@@ -624,6 +706,8 @@
       sleepTimerTimeout = setTimeout(() => {
         if (isRainActive) toggleRain();
         if (isThunderActive) toggleThunder();
+        if (isWindActive) toggleWind();
+        if (isFireActive) toggleFire();
         document.getElementById('timerSelect').value = "0";
       }, minutes * 60 * 1000);
     }
@@ -632,7 +716,7 @@
   function copyCurrentPage() {
     const text = document.getElementById('bookContent').innerText;
     navigator.clipboard.writeText(text).then(() => {
-      alert("تم نسخ الصفحة الحالية لنحافظة جهازك.");
+      alert("تم نسخ الصفحة الحالية لحافظة جهازك.");
     });
   }
 
