@@ -296,7 +296,6 @@
   <div class="sky-container" id="skyContainer"></div>
 
   <div class="app-container">
-    
     <div class="control-panel">
       <div class="audio-controls">
         <div class="sound-unit">
@@ -336,7 +335,7 @@
 
     <div id="booksView">
       <h2 style="color: var(--accent-gold); margin-bottom: 8px; font-weight: 700;">المكتبة الليلية 📚</h2>
-      <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">اختر كتاباً للقراءة مع الأصوات الطبيعية الحقيقية</p>
+      <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">اختر كتاباً للقراءة مع أصوات الطبيعة المباشرة</p>
       <div class="books-grid" id="booksContainer"></div>
     </div>
 
@@ -366,11 +365,9 @@
 
       <button class="btn-return" onclick="showBooksGrid()">العودة لرفوف الكتب 📖</button>
     </div>
-
   </div>
 
 <script>
-  // المكتبة الكاملة تضم 6 قصص
   const library = [
     {
       id: 1,
@@ -434,17 +431,131 @@
   let currentFontSize = 20;
   let sleepTimerTimeout = null;
 
-  // إصلاح دقيق ومباشر لروابط الأصوات لتطابق كل زر بالصوت الطبيعي الصحيح
-  const audioTracks = {
-    rain: new Audio('https://cdn.pixabay.com/download/audio/2021/09/06/audio_9856f70977.mp3?filename=rain-and-paved-road-11290.mp3'),
-    thunder: new Audio('https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8901037eb.mp3?filename=thunder-clap-10022.mp3'),
-    wind: new Audio('https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=wind-blowing-sfx-12809.mp3'),
-    fire: new Audio('https://cdn.pixabay.com/download/audio/2022/01/18/audio_82c237a34d.mp3?filename=fireplace-11234.mp3')
-  };
+  // توليد أصوات طبيعية داخلية عبر Web Audio API
+  let audioCtx = null;
+  const activeNodes = {};
 
-  Object.keys(audioTracks).forEach(key => {
-    audioTracks[key].loop = true;
-  });
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function createNoiseNode(ctx) {
+    const bufferSize = ctx.sampleRate * 2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+    return noise;
+  }
+
+  function startSound(type) {
+    const ctx = getAudioContext();
+    const gainNode = ctx.createGain();
+    const volInput = document.getElementById(`${type}Vol`);
+    gainNode.gain.value = parseFloat(volInput.value);
+    gainNode.connect(ctx.destination);
+
+    if (type === 'rain') {
+      const noise = createNoiseNode(ctx);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 1000;
+      noise.connect(filter);
+      filter.connect(gainNode);
+      noise.start();
+      activeNodes[type] = { source: noise, gain: gainNode };
+    } 
+    else if (type === 'wind') {
+      const noise = createNoiseNode(ctx);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 400;
+      filter.Q.value = 3.0;
+      
+      // محاكاة تموج الرياح
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.2;
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = 300;
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      lfo.start();
+
+      noise.connect(filter);
+      filter.connect(gainNode);
+      noise.start();
+      activeNodes[type] = { source: noise, lfo: lfo, gain: gainNode };
+    } 
+    else if (type === 'fire') {
+      const noise = createNoiseNode(ctx);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 800;
+      noise.connect(filter);
+      filter.connect(gainNode);
+      noise.start();
+      activeNodes[type] = { source: noise, gain: gainNode };
+    } 
+    else if (type === 'thunder') {
+      const noise = createNoiseNode(ctx);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 120;
+      
+      // مظلة انخفاض صوت الرعد التدريجي
+      gainNode.gain.setValueAtTime(parseFloat(volInput.value), ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3);
+
+      noise.connect(filter);
+      filter.connect(gainNode);
+      noise.start();
+      noise.stop(ctx.currentTime + 3);
+
+      triggerLightningFlash();
+      activeNodes[type] = { source: noise, gain: gainNode };
+      
+      setTimeout(() => {
+        document.getElementById('thunderBtn').classList.remove('active');
+        delete activeNodes['thunder'];
+      }, 3000);
+    }
+  }
+
+  function stopSound(type) {
+    if (activeNodes[type]) {
+      if (activeNodes[type].source) activeNodes[type].source.stop();
+      if (activeNodes[type].lfo) activeNodes[type].lfo.stop();
+      delete activeNodes[type];
+    }
+  }
+
+  function toggleAudio(type) {
+    const btn = document.getElementById(`${type}Btn`);
+    if (activeNodes[type]) {
+      stopSound(type);
+      btn.classList.remove('active');
+    } else {
+      startSound(type);
+      btn.classList.add('active');
+    }
+  }
+
+  function updateVolume(type) {
+    if (activeNodes[type] && activeNodes[type].gain) {
+      const volInput = document.getElementById(`${type}Vol`);
+      activeNodes[type].gain.gain.value = parseFloat(volInput.value);
+    }
+  }
 
   function init() {
     renderBooksGrid();
@@ -514,31 +625,6 @@
     }
   }
 
-  function toggleAudio(type) {
-    const audio = audioTracks[type];
-    const btn = document.getElementById(`${type}Btn`);
-    const volInput = document.getElementById(`${type}Vol`);
-
-    if (audio.paused) {
-      audio.volume = volInput.value;
-      audio.play().then(() => {
-        btn.classList.add('active');
-        if (type === 'thunder') triggerLightningFlash();
-      }).catch(err => {
-        console.error(err);
-      });
-    } else {
-      audio.pause();
-      btn.classList.remove('active');
-    }
-  }
-
-  function updateVolume(type) {
-    const audio = audioTracks[type];
-    const volInput = document.getElementById(`${type}Vol`);
-    audio.volume = volInput.value;
-  }
-
   function triggerLightningFlash() {
     const flash = document.getElementById('flash');
     flash.style.opacity = '1';
@@ -551,12 +637,9 @@
     
     if (minutes > 0) {
       sleepTimerTimeout = setTimeout(() => {
-        Object.keys(audioTracks).forEach(type => {
-          const audio = audioTracks[type];
-          if (!audio.paused) {
-            audio.pause();
-            document.getElementById(`${type}Btn`).classList.remove('active');
-          }
+        Object.keys(activeNodes).forEach(type => {
+          stopSound(type);
+          document.getElementById(`${type}Btn`).classList.remove('active');
         });
         document.getElementById('timerSelect').value = "0";
       }, minutes * 60 * 1000);
