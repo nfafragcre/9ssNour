@@ -13,7 +13,6 @@
       --book-paper: #0b101d;
       --text-color: #e2e8f0;
       --accent-gold: #f59e0b;
-      --accent-hover: #d97706;
       --border-color: rgba(245, 158, 11, 0.2);
       --font-size: 20px;
     }
@@ -50,7 +49,7 @@
       pointer-events: none;
       z-index: 999;
       opacity: 0;
-      transition: opacity 0.08s ease-out;
+      transition: opacity 0.1s ease-out;
     }
 
     .sky-container {
@@ -208,11 +207,7 @@
       margin-bottom: 20px;
     }
 
-    .book-header-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent-gold);
-    }
+    .book-header-title { font-size: 18px; font-weight: 700; color: var(--accent-gold); }
 
     .book-content {
       font-family: 'Amiri', serif;
@@ -303,26 +298,26 @@
   <div class="app-container">
     
     <div class="control-panel">
-      <!-- الأصوات المحيطية الاربعة (الخيار 4) -->
+      <!-- تشغيل الملفات الصوتية الحقيقية -->
       <div class="audio-controls">
         <div class="sound-unit">
-          <button class="btn-action" id="rainBtn" onclick="toggleRain()">🌧️ مطر</button>
-          <input type="range" class="volume-slider" id="rainVol" min="0" max="1" step="0.05" value="0.4" oninput="updateVolumes()">
+          <button class="btn-action" id="rainBtn" onclick="toggleAudio('rain')">🌧️ مطر</button>
+          <input type="range" class="volume-slider" id="rainVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolume('rain')">
         </div>
 
         <div class="sound-unit">
-          <button class="btn-action" id="thunderBtn" onclick="toggleThunder()">⚡ رعد</button>
-          <input type="range" class="volume-slider" id="thunderVol" min="0" max="1" step="0.05" value="0.7" oninput="updateVolumes()">
+          <button class="btn-action" id="thunderBtn" onclick="toggleAudio('thunder')">⚡ رعد</button>
+          <input type="range" class="volume-slider" id="thunderVol" min="0" max="1" step="0.05" value="0.6" oninput="updateVolume('thunder')">
         </div>
 
         <div class="sound-unit">
-          <button class="btn-action" id="windBtn" onclick="toggleWind()">🍃 رياح</button>
-          <input type="range" class="volume-slider" id="windVol" min="0" max="1" step="0.05" value="0.3" oninput="updateVolumes()">
+          <button class="btn-action" id="windBtn" onclick="toggleAudio('wind')">🍃 رياح</button>
+          <input type="range" class="volume-slider" id="windVol" min="0" max="1" step="0.05" value="0.4" oninput="updateVolume('wind')">
         </div>
 
         <div class="sound-unit">
-          <button class="btn-action" id="fireBtn" onclick="toggleFire()">🪵 موقد</button>
-          <input type="range" class="volume-slider" id="fireVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolumes()">
+          <button class="btn-action" id="fireBtn" onclick="toggleAudio('fire')">🪵 موقد</button>
+          <input type="range" class="volume-slider" id="fireVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolume('fire')">
         </div>
       </div>
 
@@ -342,7 +337,7 @@
 
     <div id="booksView">
       <h2 style="color: var(--accent-gold); margin-bottom: 8px; font-weight: 700;">المكتبة الليلية 📚</h2>
-      <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">اختر كتاباً للقراءة مع الخيارات الصوتية الأربعة</p>
+      <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">اختر كتاباً للقراءة مع الأصوات الطبيعية الحقيقية</p>
       <div class="books-grid" id="booksContainer"></div>
     </div>
 
@@ -384,8 +379,7 @@
       emoji: "🦊",
       pages: [
         "طلب مني الأمير الصغير رسم خروف. ولما لم أكن قد رسمت في حياتي سوى ثعبان البوا من الخارج ومن الداخل، أعدت رسم إحدى اللوحتين اللتين كنت أتقنهما: ثعبان البوا المغلق. وصدمت عندما سمعت الفتى الصغير يقول: 'لا! لا! لا أريد فيلاً داخل ثعبان بوا! الثعبان خطير جداً، والفيل ضخم للغاية. بيتي صغير جداً، وأنا بحاجة إلى خروف. ارسم لي خروفاً'. وهكذا قمت برسم الخروف. نظر إليه باهتمام ثم قال: 'لا، هذا مريض جداً. اصنع لي خروفاً آخر'. رسمت خروفاً جديداً، فابتسم صديقي الصغير برقة وتسامح قادماً للقول: 'أنت ترى بنفسك... هذا ليس خروفاً، إنه كبش له قرون...'.",
-        "عدت إلى الرسم من جديد، لكنه رفضه كسابقيه: 'هذا كبير السن، وأنا أريد خروفاً يعيش طويلاً'. ولما نفد صبري، وكان عليّ أن أبدأ في تفكيك محرك طائرتي المعطل في الصحراء، خربشت هذا الرسم على السريع، وقلت له: 'هذا هو الصندوق. والخروف الذي تطلبه موجود بالداخل'. وكم كانت مفاجأتي عظيمة عندما رأيت وجه قاضيي الصغير يضيء بابتهاج: 'هذا بالضبط ما كنت أريده! هل تعتقد أن هذا الخروف يحتاج إلى الكثير من العشب؟ لأن بيتي صغير جداً...'. قال ذلك لأنه كان يملك كوكباً لا يتعدى حجمه حجم بيت صغير.",
-        "علمت مع الوقت أن كوكبه الأصلي هو الكويكب ب-612. هذا الكويكب لم يرَه بالمناظير سوى فلكي تركي عام 1909، ولم يصدقه أحد آنذاك بسبب زيه. لكن عندما أجبرهم حاكم مستبد على ارتداء الأزياء الأوربية، أعاد الفلكي تقديم إثباته عام 1920 برداء أنيق، فوافق الجميع على اكتشافه. إن الكبار يحبون الأرقام. عندما تحدثهم عن صديق جديد، لا يسألونك أبداً عن الأهم: لا يسألون عن نبرة صوته، أو ألعابه المفضلة، أو إن كان يجمع الفراشات، بل يسألون: كم عمره؟ كم أخاً له؟ كم وزنه؟ وكم يكسب أبوه؟ وحينها فقط يعتقدون أنهم عرفوه."
+        "عدت إلى الرسم من جديد، لكنه رفضه كسابقيه: 'هذا كبير السن، وأنا أريد خروفاً يعيش طويلاً'. ولما نفد صبري، وكان عليّ أن أبدأ في تفكيك محرك طائرتي المعطل في الصحراء، خربشت هذا الرسم على السريع، وقلت له: 'هذا هو الصندوق. والخروف الذي تطلبه موجود بالداخل'. وكم كانت مفاجأتي عظيمة عندما رأيت وجه قاضيي الصغير يضيء بابتهاج: 'هذا بالضبط ما كنت أريده! هل تعتقد أن هذا الخروف يحتاج إلى الكثير من العشب؟ لأن بيتي صغير جداً...'. قال ذلك لأنه كان يملك كوكباً لا يتعدى حجمه حجم بيت صغير."
       ]
     },
     {
@@ -394,8 +388,7 @@
       author: "جبران خليل جبران",
       emoji: "📜",
       pages: [
-        "المصطفى، المختار والحبيب، الذي كان فجراً لنهاره الخاص، كان قد انتظر اثنتي عشرة سنة في مدينة أورفاليس مجيء سفينته التي ترجعه إلى الجزيرة التي ولد فيها. وفي السنة الاثنتي عشرة، في اليوم الثاني عشر من أيلول، حصاد الشهر، صعد إلى التل خارج أسوار المدينة وتطلع نحو البحر؛ فرأى سفينته تقبل مع الضباب. حينئذ انفتحت أبواب قلبه، وطارت فرحته بعيداً فوق البحر. وأغمض عينيه وصلى في هدوء روحه. ولكنه وهو نازل من التل، اعتراه حزن، وقال في قلبه: كيف أرحل في سلام ودون ألم؟ لا، لن أخرج من هذه المدينة دون أن تجرح روحي.",
-        "ثم قالت له المظلومة: حدثنا عن المحبة. فرفع رأسه ونظر إلى الشعب، وساد الهدوء عليهم. وبصوت عظيم قال: إذا أومأت إليكم المحبة فاتبعوها، وإن كانت مسالكها صعبة ووعرة. وإذا ضمتكم بجناحيها فاستسلموا لها، وإن جرحكم السيف المختفي بين ريشها. وإذا كلمتكم فصدقوها، وإن عبث صوتها بأحلامكم كما تعبث الريح الشمالية بالحديقة. المحبة لا تعطي إلا نفسها، ولا تأخذ إلا من نفسها. المحبة لا تملك، ولا تستملك، لأن المحبة كافية للمحبة."
+        "المصطفى، المختار والحبيب، الذي كان فجراً لنهاره الخاص، كان قد انتظر اثنتي عشرة سنة في مدينة أورفاليس مجيء سفينته التي ترجعه إلى الجزيرة التي ولد فيها. وفي السنة الاثنتي عشرة، في اليوم الثاني عشر من أيلول، حصاد الشهر، صعد إلى التل خارج أسوار المدينة وتطلع نحو البحر؛ فرأى سفينته تقبل مع الضباب. حينئذ انفتحت أبواب قلبه، وطارت فرحته بعيداً فوق البحر. وأغمض عينيه وصلى في هدوء روحه. ولكنه وهو نازل من التل، اعتراه حزن، وقال في قلبه: كيف أرحل في سلام ودون ألم؟ لا، لن أخرج من هذه المدينة دون أن تجرح روحي."
       ]
     },
     {
@@ -404,8 +397,7 @@
       author: "إرنست همنغواي",
       emoji: "⛵",
       pages: [
-        "كان شيخاً يصطاد السمك بمفرده في قارب صغير بـ 'جلف ستريم'، ومضى عليه الآن أربعة وثمانون يوماً دون أن يظفر بسمكة واحدة. وفي الأربعين يوماً الأولى، كان يرافقه صبي. ولكن بعد أربعين يوماً بلا سمك، قال أبوا الصبي لولدهما إن الشيخ أصبح بلا شك 'سالاو'، وهي أتعس صور الحظ السيء، وأمراه بأن يخرج في قارب آخر استطاع أن يصطاد ثلاث سمكات ممتازة في الأسبوع الأول. وكان يحزن الصبي أن يرى الشيخ عائداً كل يوم بقاربه فارغاً، فكان ينزل دائماً لليساعده في حمل حبال الصيد.",
-        "كان الشراع مرقعاً بأكياس الطحين الخالية، وكان يبدو كأنه علم هزيمة دائمة. لكن الشيخ كان نحيفاً وضامراً، مع تجاعيد عميقة في مؤخرة عنقه. وكانت البقع البنية لسرطان الجلد الخفيف، الذي تسببه الشمس المنعكسة على البحر الاستوائي، تتناثر على وجنتيه. وكانت يداه تحملان ندوباً عميقة من أثر معالجة الأسماك الثقيلة بالحبال. كل شيء فيه كان قديماً باستثناء عينيه؛ فقد كانتا بالميل نفسه للبحر، ومرحتين ولا تعرفان الهزيمة."
+        "كان شيخاً يصطاد السمك بمفرده في قارب صغير بـ 'جلف ستريم'، ومضى عليه الآن أربعة وثمانون يوماً دون أن يظفر بسمكة واحدة. وفي الأربعين يوماً الأولى، كان يرافقه صبي. ولكن بعد أربعين يوماً بلا سمك، قال أبوا الصبي لولدهما إن الشيخ أصبح بلا شك 'سالاو'، وهي أتعس صور الحظ السيء، وأمراه بأن يخرج في قارب آخر استطاع أن يصطاد ثلاث سمكات ممتازة في الأسبوع الأول."
       ]
     }
   ];
@@ -413,15 +405,20 @@
   let currentBookIndex = 0;
   let currentPageIndex = 0;
   let currentFontSize = 20;
-
-  let audioCtx = null;
-  
-  // الحالات ومحركات الصوت
-  let isRainActive = false, rainSource = null, rainGain = null;
-  let isThunderActive = false, thunderTimeout = null;
-  let isWindActive = false, windSource = null, windGain = null;
-  let isFireActive = false, fireSource = null, fireGain = null;
   let sleepTimerTimeout = null;
+
+  // روابط الصوتيات الحقيقية المباشرة والمجانية من خوادم عالمية مشهورة
+  const audioTracks = {
+    rain: new Audio('https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg'),
+    thunder: new Audio('https://actions.google.com/sounds/v1/weather/thunder_crack.ogg'),
+    wind: new Audio('https://actions.google.com/sounds/v1/weather/wind_synth.ogg'),
+    fire: new Audio('https://actions.google.com/sounds/v1/ambiences/fireplace.ogg')
+  };
+
+  // ضبط التكرار لجميع الأصوات لتستمر دون توقف
+  Object.keys(audioTracks).forEach(key => {
+    audioTracks[key].loop = true;
+  });
 
   function init() {
     renderBooksGrid();
@@ -491,205 +488,30 @@
     }
   }
 
-  function initAudioContext() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-  }
+  // التحكم بتمكين وإيقاف الملفات الصوتية الحقيقية
+  function toggleAudio(type) {
+    const audio = audioTracks[type];
+    const btn = document.getElementById(`${type}Btn`);
+    const volInput = document.getElementById(`${type}Vol`);
 
-  function createWhiteNoiseBuffer() {
-    const bufferSize = audioCtx.sampleRate * 2;
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const output = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      output[i] = Math.random() * 2 - 1;
-    }
-    return buffer;
-  }
-
-  // 1. صوت المطر
-  function toggleRain() {
-    initAudioContext();
-    const btn = document.getElementById('rainBtn');
-    if (!isRainActive) {
-      rainSource = audioCtx.createBufferSource();
-      rainSource.buffer = createWhiteNoiseBuffer();
-      rainSource.loop = true;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 500;
-
-      rainGain = audioCtx.createGain();
-      const vol = document.getElementById('rainVol').value;
-      rainGain.gain.setValueAtTime(vol * 0.1, audioCtx.currentTime);
-
-      rainSource.connect(filter);
-      filter.connect(rainGain);
-      rainGain.connect(audioCtx.destination);
-
-      rainSource.start();
-      isRainActive = true;
-      btn.classList.add('active');
+    if (audio.paused) {
+      audio.volume = volInput.value;
+      audio.play().then(() => {
+        btn.classList.add('active');
+        if (type === 'thunder') triggerLightningFlash();
+      }).catch(err => {
+        alert("يرجى التفاعل مع الصفحة أولاً لتشغيل الصوت بشكل طبيعي.");
+      });
     } else {
-      if (rainSource) rainSource.stop();
-      isRainActive = false;
+      audio.pause();
       btn.classList.remove('active');
     }
   }
 
-  // 2. إصلاح الرعد المطور (سماع الانفجار + الحشرجة)
-  function toggleThunder() {
-    initAudioContext();
-    const btn = document.getElementById('thunderBtn');
-    if (!isThunderActive) {
-      isThunderActive = true;
-      btn.classList.add('active');
-      scheduleNextThunder();
-    } else {
-      isThunderActive = false;
-      if (thunderTimeout) clearTimeout(thunderTimeout);
-      btn.classList.remove('active');
-    }
-  }
-
-  function scheduleNextThunder() {
-    if (!isThunderActive) return;
-    playRealThunder();
-    const nextTime = Math.floor(Math.random() * 7000) + 6000; // بين 6 و 13 ثانية
-    thunderTimeout = setTimeout(scheduleNextThunder, nextTime);
-  }
-
-  function playRealThunder() {
-    if (!audioCtx || !isThunderActive) return;
-
-    triggerLightningFlash();
-
-    const now = audioCtx.currentTime;
-    const vol = parseFloat(document.getElementById('thunderVol').value);
-
-    // هزة التردد المنخفض
-    const osc = audioCtx.createOscillator();
-    const oscGain = audioCtx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(120, now);
-    osc.frequency.exponentialRampToValueAtTime(30, now + 2.5);
-
-    oscGain.gain.setValueAtTime(0.01, now);
-    oscGain.gain.linearRampToValueAtTime(0.6 * vol, now + 0.15);
-    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
-
-    osc.connect(oscGain);
-    oscGain.connect(audioCtx.destination);
-    osc.start(now);
-    osc.stop(now + 2.5);
-
-    // صوت الحشرجة العالي (Noise)
-    const noise = audioCtx.createBufferSource();
-    noise.buffer = createWhiteNoiseBuffer();
-
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(400, now);
-    filter.frequency.linearRampToValueAtTime(100, now + 2.0);
-
-    const noiseGain = audioCtx.createGain();
-    noiseGain.gain.setValueAtTime(0.01, now);
-    noiseGain.gain.linearRampToValueAtTime(0.4 * vol, now + 0.1);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
-
-    noise.connect(filter);
-    filter.connect(noiseGain);
-    noiseGain.connect(audioCtx.destination);
-
-    noise.start(now);
-    noise.stop(now + 2.0);
-  }
-
-  // 3. صوت الرياح (خيارات إضافية)
-  function toggleWind() {
-    initAudioContext();
-    const btn = document.getElementById('windBtn');
-    if (!isWindActive) {
-      windSource = audioCtx.createBufferSource();
-      windSource.buffer = createWhiteNoiseBuffer();
-      windSource.loop = true;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 300;
-      filter.Q.value = 3.0;
-
-      // تحريك التردد لإعطاء إحساس هبوب الرياح
-      setInterval(() => {
-        if (isWindActive && audioCtx) {
-          filter.frequency.setTargetAtTime(200 + Math.random() * 300, audioCtx.currentTime, 1.5);
-        }
-      }, 2000);
-
-      windGain = audioCtx.createGain();
-      const vol = document.getElementById('windVol').value;
-      windGain.gain.setValueAtTime(vol * 0.15, audioCtx.currentTime);
-
-      windSource.connect(filter);
-      filter.connect(windGain);
-      windGain.connect(audioCtx.destination);
-
-      windSource.start();
-      isWindActive = true;
-      btn.classList.add('active');
-    } else {
-      if (windSource) windSource.stop();
-      isWindActive = false;
-      btn.classList.remove('active');
-    }
-  }
-
-  // 4. صوت الموقد والنار (خيارات إضافية)
-  function toggleFire() {
-    initAudioContext();
-    const btn = document.getElementById('fireBtn');
-    if (!isFireActive) {
-      fireSource = audioCtx.createBufferSource();
-      fireSource.buffer = createWhiteNoiseBuffer();
-      fireSource.loop = true;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 1000;
-      filter.Q.value = 1.0;
-
-      fireGain = audioCtx.createGain();
-      const vol = document.getElementById('fireVol').value;
-      fireGain.gain.setValueAtTime(vol * 0.05, audioCtx.currentTime);
-
-      fireSource.connect(filter);
-      filter.connect(fireGain);
-      fireGain.connect(audioCtx.destination);
-
-      fireSource.start();
-      isFireActive = true;
-      btn.classList.add('active');
-    } else {
-      if (fireSource) fireSource.stop();
-      isFireActive = false;
-      btn.classList.remove('active');
-    }
-  }
-
-  function updateVolumes() {
-    if (rainGain && isRainActive) {
-      rainGain.gain.setValueAtTime(document.getElementById('rainVol').value * 0.1, audioCtx.currentTime);
-    }
-    if (windGain && isWindActive) {
-      windGain.gain.setValueAtTime(document.getElementById('windVol').value * 0.15, audioCtx.currentTime);
-    }
-    if (fireGain && isFireActive) {
-      fireGain.gain.setValueAtTime(document.getElementById('fireVol').value * 0.05, audioCtx.currentTime);
-    }
+  function updateVolume(type) {
+    const audio = audioTracks[type];
+    const volInput = document.getElementById(`${type}Vol`);
+    audio.volume = volInput.value;
   }
 
   function triggerLightningFlash() {
@@ -704,10 +526,13 @@
     
     if (minutes > 0) {
       sleepTimerTimeout = setTimeout(() => {
-        if (isRainActive) toggleRain();
-        if (isThunderActive) toggleThunder();
-        if (isWindActive) toggleWind();
-        if (isFireActive) toggleFire();
+        Object.keys(audioTracks).forEach(type => {
+          const audio = audioTracks[type];
+          if (!audio.paused) {
+            audio.pause();
+            document.getElementById(`${type}Btn`).classList.remove('active');
+          }
+        });
         document.getElementById('timerSelect').value = "0";
       }, minutes * 60 * 1000);
     }
