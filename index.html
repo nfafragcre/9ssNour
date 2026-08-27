@@ -102,8 +102,7 @@
       transition: all 0.2s;
     }
 
-    .icon-btn:hover { background: var(--accent-gold); color: #000; }
-    .icon-btn.active { background: var(--accent-gold); color: #000; }
+    .icon-btn:hover, .icon-btn.active { background: var(--accent-gold); color: #000; }
 
     .story-card {
       background: rgba(3, 7, 18, 0.6);
@@ -274,14 +273,11 @@
   let currentPageIndex = 0;
   let currentFontSize = 22;
 
-  // إعداد الصوت
-  const rainAudio = new Audio("https://cdn.pixabay.com/download/audio/2021/09/06/audio_2d832d2073.mp3?filename=soft-rain-ambient-111154.mp3");
-  rainAudio.loop = true;
-  rainAudio.volume = 0.4;
-
-  let isThunderActive = false;
-  let thunderInterval = null;
   let audioCtx = null;
+  let isRainActive = false;
+  let isThunderActive = false;
+  let rainSource = null;
+  let thunderInterval = null;
 
   function init() {
     const savedStory = localStorage.getItem('night_story_id');
@@ -313,44 +309,69 @@
     }
   }
 
-  // التحكم بصوت المطر
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  // تشغيل صوت مطر ناعم ودافئ (محاكاة ناتجة عن مرشحات التردد المنخفض)
   function toggleRain() {
     const btn = document.getElementById('rainBtn');
-    if (rainAudio.paused) {
-      rainAudio.play().then(() => {
-        btn.innerText = "🌧️ مطر: يعمل";
-        btn.classList.add('active');
-      }).catch(err => console.log(err));
+    const ctx = getAudioContext();
+
+    if (!isRainActive) {
+      const bufferSize = ctx.sampleRate * 2;
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      rainSource = ctx.createBufferSource();
+      rainSource.buffer = noiseBuffer;
+      rainSource.loop = true;
+
+      const lowpass = ctx.createBiquadFilter();
+      lowpass.type = 'lowpass';
+      lowpass.frequency.setValueAtTime(400, ctx.currentTime); // تردد منخفض جداً لإلغاء أي تشويش حاد
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.04, ctx.currentTime); // مستوى صوت دافئ وهادئ
+
+      rainSource.connect(lowpass);
+      lowpass.connect(gain);
+      gain.connect(ctx.destination);
+
+      rainSource.start();
+      isRainActive = true;
+      btn.innerText = "🌧️ مطر: يعمل";
+      btn.classList.add('active');
     } else {
-      rainAudio.pause();
+      if (rainSource) rainSource.stop();
+      isRainActive = false;
       btn.innerText = "🌧️ مطر: مغلق";
       btn.classList.remove('active');
     }
   }
 
-  // التحكم بصوت البرق ورعد مهدئ لطيف
+  // تشغيل صوت برق ورعد لطيف
   function toggleThunder() {
     const btn = document.getElementById('thunderBtn');
     
     if (!isThunderActive) {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
+      getAudioContext();
       isThunderActive = true;
       btn.innerText = "⚡ برق: يعمل";
       btn.classList.add('active');
 
-      // ضربة برق ورعد فورية
       playSoftThunder();
-
-      // تكرار صوت البرق بطريقة هادئة وتبادلية كل 10-16 ثانية
-      thunderInterval = setInterval(() => {
-        playSoftThunder();
-      }, 12000);
+      thunderInterval = setInterval(playSoftThunder, 10000);
     } else {
       isThunderActive = false;
       if (thunderInterval) clearInterval(thunderInterval);
@@ -359,7 +380,6 @@
     }
   }
 
-  // توليد صوت برق/رعد لطيف، عميق وهادئ جداً
   function playSoftThunder() {
     if (!audioCtx || !isThunderActive) return;
 
@@ -368,23 +388,22 @@
     const filter = audioCtx.createBiquadFilter();
 
     osc.type = 'sine';
-    // ترددات خفيضة جداً لتعطي إحساس بالرعد البعيد واللطيف
-    osc.frequency.setValueAtTime(45, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(15, audioCtx.currentTime + 3.0);
+    osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(18, audioCtx.currentTime + 2.5);
 
     filter.type = 'lowpass';
-    filter.frequency.value = 150; // قص الترددات العالية لإلغاء أي حدة
+    filter.frequency.value = 120;
 
-    gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 0.4); // دخول تدريجي ناعم
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.2); // تلاشي هادئ
+    gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
 
     osc.connect(filter);
     filter.connect(gain);
     gain.connect(audioCtx.destination);
 
     osc.start();
-    osc.stop(audioCtx.currentTime + 3.2);
+    osc.stop(audioCtx.currentTime + 2.5);
   }
 
   function loadRandomStory() {
