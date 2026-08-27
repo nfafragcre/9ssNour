@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>قصص الأقمار والنجوم 🌙</title>
+  <title>مكتبة أحلام المساء 🌙</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
   
   <style>
@@ -35,29 +35,32 @@
       justify-content: center;
       padding: 15px;
       direction: rtl;
-      transition: all 0.4s ease;
+      transition: background-color 0.4s ease;
       overflow-x: hidden;
       position: relative;
     }
 
+    /* وميض البرق */
+    .lightning-flash {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      pointer-events: none;
+      z-index: 99;
+      opacity: 0;
+      transition: opacity 0.05s ease-out;
+    }
+
     .sky-container {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; overflow: hidden;
     }
 
     .falling-item {
-      position: absolute;
-      top: -30px;
-      color: var(--accent-gold);
-      opacity: 0.7;
-      animation: fall linear infinite;
-      user-select: none;
+      position: absolute; top: -30px;
+      color: var(--accent-gold); opacity: 0.7;
+      animation: fall linear infinite; user-select: none;
     }
 
     @keyframes fall {
@@ -74,7 +77,7 @@
       border: 1px solid var(--border-color);
       border-radius: 28px;
       padding: 25px 20px;
-      max-width: 600px;
+      max-width: 650px;
       width: 100%;
       text-align: center;
       box-shadow: 0 0 35px rgba(0,0,0,0.9);
@@ -88,7 +91,20 @@
       align-items: center;
       margin-bottom: 15px;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
+    }
+
+    .sound-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .volume-slider {
+      width: 80px;
+      accent-color: var(--accent-gold);
+      cursor: pointer;
     }
 
     .icon-btn {
@@ -104,6 +120,37 @@
 
     .icon-btn:hover, .icon-btn.active { background: var(--accent-gold); color: #000; }
 
+    /* قائمة الكتب */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .book-card {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .book-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-gold);
+      box-shadow: 0 5px 20px rgba(251, 191, 36, 0.2);
+    }
+
+    .book-emoji { font-size: 40px; }
+    .book-title { font-size: 16px; font-weight: 700; color: var(--accent-gold); }
+
+    /* كارت القصة */
     .story-card {
       background: rgba(3, 7, 18, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.05);
@@ -123,6 +170,9 @@
       border-bottom: 1px dashed var(--border-color);
       padding-bottom: 10px;
       margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .story-text {
@@ -138,22 +188,16 @@
     }
 
     .progress-bar {
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 2px;
-      margin-bottom: 10px;
-      overflow: hidden;
+      height: 4px; background: rgba(255,255,255,0.1);
+      border-radius: 2px; margin-bottom: 10px; overflow: hidden;
     }
 
     .progress-fill {
-      height: 100%;
-      background: var(--accent-gold);
-      width: 0%;
-      transition: width 0.3s ease;
+      height: 100%; background: var(--accent-gold);
+      width: 0%; transition: width 0.3s ease;
     }
 
     .page-indicator { font-size: 13px; color: var(--accent-gold); opacity: 0.8; }
-
     .controls { display: flex; gap: 10px; justify-content: space-between; margin-top: 10px; }
 
     .btn {
@@ -172,44 +216,78 @@
     .btn:hover:not(:disabled) { background: var(--accent-gold); color: #000; }
     .btn:disabled { opacity: 0.2; cursor: not-allowed; border-color: #555; color: #555; }
     .btn-main { background: var(--accent-gold); color: #000; width: 100%; margin-top: 10px; }
+
+    select.icon-btn {
+      outline: none;
+      background: #111827;
+    }
   </style>
 </head>
 <body>
 
+  <div class="lightning-flash" id="flash"></div>
   <div class="sky-container" id="skyContainer"></div>
 
   <div class="container">
     <div class="top-bar">
-      <button class="icon-btn" id="rainBtn" onclick="toggleRain()">🌧️ مطر: مغلق</button>
-      <button class="icon-btn" id="thunderBtn" onclick="toggleThunder()">⚡ برق: مغلق</button>
-      <button class="icon-btn" onclick="toggleSuperDark()">🕶️ وضع الظلام</button>
+      <div class="sound-control">
+        <button class="icon-btn" id="rainBtn" onclick="toggleRain()">🌧️ مطر: مغلق</button>
+        <input type="range" class="volume-slider" id="rainVol" min="0" max="1" step="0.05" value="0.4" oninput="updateVolume()">
+      </div>
+
+      <div class="sound-control">
+        <button class="icon-btn" id="thunderBtn" onclick="toggleThunder()">⚡ برق: مغلق</button>
+        <input type="range" class="volume-slider" id="thunderVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolume()">
+      </div>
+
+      <select class="icon-btn" id="timerSelect" onchange="setSleepTimer()">
+        <option value="0">⏱️ المؤقت: إيقاف</option>
+        <option value="15">⏱️ 15 دقيقة</option>
+        <option value="30">⏱️ 30 دقيقة</option>
+        <option value="60">⏱️ 60 دقيقة</option>
+      </select>
+
+      <button class="icon-btn" onclick="toggleSuperDark()">🕶️ ظلام</button>
       <div>
         <button class="icon-btn" onclick="adjustFont(1)">A+</button>
         <button class="icon-btn" onclick="adjustFont(-1)">A-</button>
       </div>
     </div>
 
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-
-    <div class="story-card">
-      <div class="story-title" id="storyTitle">...</div>
-      <div class="story-text" id="storyText">...</div>
-      <div class="page-indicator" id="pageIndicator">الصفحة 0 من 0</div>
+    <!-- واجهة القائمة الخاصة بالكتب -->
+    <div id="booksView">
+      <h2 style="color: var(--accent-gold); margin-bottom: 10px;">اختر كتاباً ليلياً 📖</h2>
+      <div class="books-grid" id="booksContainer"></div>
     </div>
 
-    <div class="controls">
-      <button class="btn" id="prevBtn" onclick="changePage(-1)" disabled>السابقة ➔</button>
-      <button class="btn" id="nextBtn" onclick="changePage(1)" disabled>⬅ التالية</button>
-    </div>
+    <!-- واجهة قراءة القصة -->
+    <div id="storyView" style="display: none;">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
-    <button class="btn btn-main" onclick="loadRandomStory()">قصة جديدة 📖</button>
+      <div class="story-card">
+        <div class="story-title">
+          <span id="storyTitle">...</span>
+          <button class="icon-btn" onclick="copyStoryText()">📋 نسخ</button>
+        </div>
+        <div class="story-text" id="storyText">...</div>
+        <div class="page-indicator" id="pageIndicator">الصفحة 0 من 0</div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="prevBtn" onclick="changePage(-1)" disabled>السابقة ➔</button>
+        <button class="btn" id="nextBtn" onclick="changePage(1)" disabled>⬅ التالية</button>
+      </div>
+
+      <button class="btn btn-main" onclick="showBooksList()">العودة لقائمة الكتب 📚</button>
+    </div>
   </div>
 
 <script>
   const stories = [
     {
       id: 1,
-      title: "ليلى والذئب وحارس الغابة 🌲",
+      title: "ليلى والذئب وحارس الغابة",
+      emoji: "🌲",
       pages: [
         "في أطراف قرية هادئة تحفها الأشجار العالية، كانت تنام ليلى في بيتها الخشبي الصغير. وفي أحد الأيام، طلبت منها أمها أن تأخذ سلة مملوءة بالكعك الدافئ إلى بيت جدتها التي تسكن خلف التلة المورقة.",
         "ارتدت ليلى رداءها الأحمر الأثير، وأخذت السلة وسارت بخطى متأنية. كانت الغابة مليئة بأصوات العصافير وخرير المياه، وكانت أشعة الشمس تتسلل بين الأغصان لتصنع لوحة من الضوء والظلال.",
@@ -219,7 +297,8 @@
     },
     {
       id: 2,
-      title: "سباق الأرنب والسلحفاة الحقيقي 🐢",
+      title: "سباق الأرنب والسلحفاة الحقيقي",
+      emoji: "🐢",
       pages: [
         "كان الأرنب 'سريع' يفخر دائماً بخفته، بينما كانت السلحفاة 'حكيمة' تسير ببطء شديد وتتأمل كل زهرة وحصاة. وفي يوم من أيام الربيع، اتفقا على إجراء مسابقة مشي نحو الشجرة الكبيرة.",
         "انطلق الأرنب كالسهم وترك السلحفاة خلفه. ولكن بدلاً من أن يركض دون توقف، شعر بالملل من العجلة، فقرر الاستلقاء تحت ظلال شجرة توت دافئة وقال في نفسه: 'لدي وقت طويل لأستريح'.",
@@ -229,7 +308,8 @@
     },
     {
       id: 3,
-      title: "قصر الأميرة ووردة النجوم 👑",
+      title: "قصر الأميرة ووردة النجوم",
+      emoji: "👑",
       pages: [
         "في مملكة شاسعة تقع فوق جبال الضباب، عاش أمير يبحث عن السكينة. سمع عن أميرة تعيش في قصر من الفضة، تحرس وردة فريدة لا تتفتح إلا عندما تستمع لألحان هادئة.",
         "سافر الأمير أياماً طويلة عبر الوديان حتى وصل إلى القصر. هناك وجد الأميرة تجلس في الشرفة تحت سماء مليئة بالنجوم المضيئة، وتضع يدها على الوردة وتغني بصوت عذب يبعث الطمأنينة.",
@@ -239,7 +319,8 @@
     },
     {
       id: 4,
-      title: "الأمير والوردة البيضاء 🤍",
+      title: "الأمير والوردة البيضاء",
+      emoji: "🤍",
       pages: [
         "في مملكة بعيدة، كان هناك أمير يقضي لياليه في العناية بحديقة قصر قُديمة. وكانت هناك وردة بيضاء واحدة لا تفتح أوراقها إلا مع ظهور أول نجمة في السماء.",
         "كان الأمير يجلس جوارها كل مساء، يحكي لها عن تفاصيل يومه وعن حلمه بلقاء شخص يشاركه حب الهدوء والأشياء البسيطة. وكانت الوردة تتمايل مع كلماته كأنها تفهمه.",
@@ -249,7 +330,8 @@
     },
     {
       id: 5,
-      title: "بائع الفوانيس والقمر 🏮",
+      title: "بائع الفوانيس والقمر",
+      emoji: "🏮",
       pages: [
         "في بلدة صغيرة على ضفاف البحيرة، عاش عجوز يصنع فوانيس خشبية دافئة الضوء. لم يكن يبيعها بالمال، بل كان يهديلها لمن يحتاج نوراً يطمئن قلبه قبل النوم.",
         "في إحدى الليالي المظلمة، جاءته طفلة صغيرة تخاف من ظلال الليل. أخذ العجوز فانوساً صغيراً ووضع فيه شمعة برائحة اللافندر الدافئة وقال لها: 'هذا الفانوس يحمل جزءاً من ضوء القمر'.",
@@ -259,7 +341,8 @@
     },
     {
       id: 6,
-      title: "أميرة المرج الوردي 🌸",
+      title: "أميرة المرج الوردي",
+      emoji: "🌸",
       pages: [
         "ورا جبال الضباب، كان هناك مرج واسع تتفتح فيه أزهار وردية لا تذبل أبداً. وكانت تعيش هناك أميرة تحب السير حافية القدمين على الأعشاب الندية كل مساء.",
         "كانت تعزف على قيثارة صغيرة ألحاناً تشبه صوت النسمات الصيفية. وكانت الحيوانات الصغيرة تجمع حولها لتستمع إلى عزفها وتستعد للنوم.",
@@ -277,21 +360,41 @@
   let isRainActive = false;
   let isThunderActive = false;
   let rainSource = null;
+  let rainGainNode = null;
   let thunderInterval = null;
+  let sleepTimerTimeout = null;
 
   function init() {
-    const savedStory = localStorage.getItem('night_story_id');
-    const savedPage = localStorage.getItem('night_story_page');
-
-    if (savedStory !== null && savedPage !== null) {
-      const foundIndex = stories.findIndex(s => s.id == savedStory);
-      if (foundIndex !== -1) {
-        currentStoryIndex = foundIndex;
-        currentPageIndex = parseInt(savedPage);
-      }
-    }
-    updateUI();
+    renderBooks();
     createFallingSky();
+  }
+
+  function renderBooks() {
+    const container = document.getElementById('booksContainer');
+    container.innerHTML = '';
+    stories.forEach((story, idx) => {
+      const card = document.createElement('div');
+      card.className = 'book-card';
+      card.onclick = () => openBook(idx);
+      card.innerHTML = `
+        <div class="book-emoji">${story.emoji}</div>
+        <div class="book-title">${story.title}</div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function openBook(index) {
+    currentStoryIndex = index;
+    currentPageIndex = 0;
+    document.getElementById('booksView').style.display = 'none';
+    document.getElementById('storyView').style.display = 'block';
+    updateUI();
+  }
+
+  function showBooksList() {
+    document.getElementById('storyView').style.display = 'none';
+    document.getElementById('booksView').style.display = 'block';
   }
 
   function createFallingSky() {
@@ -339,12 +442,13 @@
       lowpass.type = 'lowpass';
       lowpass.frequency.setValueAtTime(450, audioCtx.currentTime);
 
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      rainGainNode = audioCtx.createGain();
+      const vol = document.getElementById('rainVol').value;
+      rainGainNode.gain.setValueAtTime(vol * 0.1, audioCtx.currentTime);
 
       rainSource.connect(lowpass);
-      lowpass.connect(gain);
-      gain.connect(audioCtx.destination);
+      lowpass.connect(rainGainNode);
+      rainGainNode.connect(audioCtx.destination);
 
       rainSource.start();
       isRainActive = true;
@@ -367,10 +471,7 @@
       btn.innerText = "⚡ برق: يعمل";
       btn.classList.add('active');
 
-      // تشغيل الضربة الأولى مباشرة
       playSoftThunder();
-      
-      // التكرار كل 9 ثوانٍ
       thunderInterval = setInterval(playSoftThunder, 9000);
     } else {
       isThunderActive = false;
@@ -380,13 +481,27 @@
     }
   }
 
-  // إنشاء صوت برق ورعد مدمج يسمع بوضوح ولطيف
+  function updateVolume() {
+    if (rainGainNode && isRainActive) {
+      const vol = document.getElementById('rainVol').value;
+      rainGainNode.gain.setValueAtTime(vol * 0.1, audioCtx.currentTime);
+    }
+  }
+
+  function triggerLightningFlash() {
+    const flash = document.getElementById('flash');
+    flash.style.opacity = '1';
+    setTimeout(() => { flash.style.opacity = '0'; }, 150);
+  }
+
   function playSoftThunder() {
     if (!audioCtx || !isThunderActive) return;
 
-    const now = audioCtx.currentTime;
+    triggerLightningFlash();
 
-    // الطبقة الأولى: التردد المنخفض الدافئ (Boom)
+    const now = audioCtx.currentTime;
+    const masterVol = document.getElementById('thunderVol').value;
+
     const osc1 = audioCtx.createOscillator();
     const gain1 = audioCtx.createGain();
     const filter1 = audioCtx.createBiquadFilter();
@@ -399,7 +514,7 @@
     filter1.frequency.value = 250;
 
     gain1.gain.setValueAtTime(0.01, now);
-    gain1.gain.linearRampToValueAtTime(0.25, now + 0.15);
+    gain1.gain.linearRampToValueAtTime(0.25 * masterVol, now + 0.15);
     gain1.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
 
     osc1.connect(filter1);
@@ -409,7 +524,6 @@
     osc1.start(now);
     osc1.stop(now + 2.0);
 
-    // الطبقة الثانية: صوت هزيم الرعد من بعيد (Rumble)
     const bufferSize = audioCtx.sampleRate * 2.5;
     const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
     const output = noiseBuffer.getChannelData(0);
@@ -426,7 +540,7 @@
 
     const gain2 = audioCtx.createGain();
     gain2.gain.setValueAtTime(0.01, now);
-    gain2.gain.linearRampToValueAtTime(0.18, now + 0.2);
+    gain2.gain.linearRampToValueAtTime(0.18 * masterVol, now + 0.2);
     gain2.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
 
     noise.connect(filter2);
@@ -437,32 +551,34 @@
     noise.stop(now + 2.5);
   }
 
-  function loadRandomStory() {
-    let newIndex;
-    do {
-      newIndex = Math.floor(Math.random() * stories.length);
-    } while (newIndex === currentStoryIndex && stories.length > 1);
+  function setSleepTimer() {
+    if (sleepTimerTimeout) clearTimeout(sleepTimerTimeout);
+    const minutes = parseInt(document.getElementById('timerSelect').value);
+    
+    if (minutes > 0) {
+      sleepTimerTimeout = setTimeout(() => {
+        if (isRainActive) toggleRain();
+        if (isThunderActive) toggleThunder();
+        document.getElementById('timerSelect').value = "0";
+      }, minutes * 60 * 1000);
+    }
+  }
 
-    currentStoryIndex = newIndex;
-    currentPageIndex = 0;
-    saveProgress();
-    updateUI();
+  function copyStoryText() {
+    const text = document.getElementById('storyText').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("تم نسخ الصفحة بنجاح!");
+    });
   }
 
   function changePage(direction) {
     currentPageIndex += direction;
-    saveProgress();
     updateUI();
-  }
-
-  function saveProgress() {
-    localStorage.setItem('night_story_id', stories[currentStoryIndex].id);
-    localStorage.setItem('night_story_page', currentPageIndex);
   }
 
   function updateUI() {
     const story = stories[currentStoryIndex];
-    document.getElementById('storyTitle').innerText = story.title;
+    document.getElementById('storyTitle').innerText = `${story.emoji} ${story.title}`;
     document.getElementById('storyText').innerText = story.pages[currentPageIndex];
     document.getElementById('pageIndicator').innerText = `الصفحة ${currentPageIndex + 1} من ${story.pages.length}`;
 
