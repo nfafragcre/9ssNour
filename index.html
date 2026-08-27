@@ -3,146 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>قصص قبل النوم 🌙</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>قصص الأقمار والنجوم 🌙</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-color: #0b132b;
-      --card-bg: rgba(28, 37, 65, 0.75);
-      --text-color: #e0e1dd;
-      --accent-color: #ffb703;
-      --border-color: rgba(255, 255, 255, 0.1);
+      --bg-color: #050814;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --text-glow: #fff8db;
+      --accent-gold: #ffc107;
+      --border-color: rgba(255, 193, 7, 0.2);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
 
     body {
       background-color: var(--bg-color);
-      background-image: radial-gradient(circle at top, #1c2541 0%, #0b132b 100%);
-      color: var(--text-color);
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #ffd700, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, #ffd700, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      color: #f8fafc;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 15px;
       direction: rtl;
     }
 
     .container {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
       border-radius: 24px;
-      padding: 30px 24px;
-      max-width: 550px;
+      padding: 28px 20px;
+      max-width: 600px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 30px rgba(255, 193, 7, 0.1);
     }
 
-    .moon-icon { font-size: 42px; margin-bottom: 8px; }
-    h1 { font-size: 22px; color: var(--accent-color); margin-bottom: 6px; font-weight: 700; }
-    .subtitle { font-size: 14px; opacity: 0.75; margin-bottom: 20px; }
+    .stars-header { font-size: 24px; letter-spacing: 4px; margin-bottom: 5px; color: var(--accent-gold); }
     
     .story-card {
-      background: rgba(11, 19, 43, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 18px;
-      padding: 22px;
+      background: rgba(5, 8, 20, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 25px 20px;
       margin: 20px 0;
-      text-align: right;
-      min-height: 200px;
+      min-height: 280px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
     }
 
     .story-title {
-      font-size: 18px;
-      color: var(--accent-color);
-      margin-bottom: 12px;
+      font-size: 20px;
+      color: var(--accent-gold);
       font-weight: 700;
-      border-bottom: 1px dashed rgba(255, 183, 3, 0.3);
-      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
     }
 
     .story-text {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #f1f5f9;
-      white-space: pre-line;
+      font-family: 'Amiri', serif;
+      font-size: 22px; /* خط كبير ومريح للقصص */
+      line-height: 1.9;
+      color: var(--text-glow);
+      text-shadow: 0 0 8px rgba(255, 248, 219, 0.4); /* تأثير الخط المضيء */
+      text-align: justify;
+      text-align-last: center;
+      margin-bottom: 15px;
+    }
+
+    .page-indicator {
+      font-size: 13px;
+      color: var(--accent-gold);
+      opacity: 0.8;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      margin-top: 10px;
     }
 
     .btn {
-      background: var(--accent-color);
-      color: #0b132b;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 14px;
-      font-size: 16px;
+      background: rgba(255, 193, 7, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid var(--accent-gold);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 8px 20px rgba(255, 183, 3, 0.2);
-      width: 100%;
+      transition: all 0.2s ease;
+      flex: 1;
     }
 
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255, 183, 3, 0.3); }
-    .btn:active { transform: translateY(1px); }
+    .btn:hover:not(:disabled) {
+      background: var(--accent-gold);
+      color: #050814;
+      box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: #666;
+      color: #666;
+    }
+
+    .btn-main {
+      background: var(--accent-gold);
+      color: #050814;
+      width: 100%;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="moon-icon">🌙</div>
-    <h1>حكاية قبل النوم</h1>
-    <p class="subtitle">جهزي نفسك للنوم واقرئي قصة الليلة الهادئة ✨</p>
+    <div class="stars-header">✨ 🌙 ✨</div>
+    <h1 style="font-size: 20px; color: #fff;">حكايات المساء والأحلام</h1>
 
     <div class="story-card">
-      <div class="story-title" id="storyTitle">أهلاً بكِ في عالم الأحلام</div>
-      <div class="story-text" id="storyText">اضغطي على الزر بالأسفل لاختيار قصة الليلة...</div>
+      <div class="story-title" id="storyTitle">اضغطي للبدء</div>
+      <div class="story-text" id="storyText">اختر قصة وابدأ القراءة عبر الصفحات...</div>
+      <div class="page-indicator" id="pageIndicator">الصفحة 0 من 0</div>
     </div>
 
-    <button class="btn" onclick="getRandomStory()">اقرئي قصة جديدة 📖</button>
+    <div class="controls">
+      <button class="btn" id="prevBtn" onclick="changePage(-1)" disabled>السابقة ➔</button>
+      <button class="btn" id="nextBtn" onclick="changePage(1)" disabled>⬅ التالية</button>
+    </div>
+
+    <button class="btn btn-main" onclick="loadRandomStory()">اختيار قصة جديدة 📖</button>
   </div>
 
 <script>
+  // قائمة القصص المكتوبة كاملاً ومقسمة على عدة صفحات
   const stories = [
     {
-      title: "ليلى والذئب في الغابة الهادئة 🌲",
-      text: "في طرف الغابة الخضراء، كانت ليلى تسير ببطء بين الأشجار العالية، تتابع الفراشات الملونة وتستمع لخرير الماء. وعندما التقت بالذئب، لم يكن شريرًا كما في الحكايات القديمة، بل كان حكيم الغابة الذي يرعى أزهارها. أهدى ليلى زهرة ياسمين ورائحة تفاح، وأرشدها إلى أسرع طريق لبيت جدتها لكي تتناول معها الفطيرة الدافئة وتنام في حضنها بأمان دون أي خوف."
+      title: "ليلى والذئب وحارس الغابة 🌲",
+      pages: [
+        "في أطراف قرية هادئة تحفها الأشجار العالية، كانت تنام ليلى في بيتها الخشبي الصغير. وفي أحد الأيام، طلبت منها أمها أن تأخذ سلة مملوءة بالكعك الدافئ والزبادي إلى بيت جدتها التي تسكن خلف التلة المورقة.",
+        "ارتدت ليلى رداءها الأحمر الأثير، وأخذت السلة وسارت بخطى متأنية. كانت الغابة مليئة بأصوات العصافير وخرير المياه، ولم تكن مظلمة بل كانت أشعة الشمس تتسلل بين الأغصان لتصنع لوحة من الضوء والظلال.",
+        "وفي منتصف الطريق، خرج من بين الأشجار ذئب رمادي ضخم. لم يرتجف قلب ليلى، لأن هذا الذئب لم يكن سوى حارس الغابة القديم. اقترب منها ببطء وقدم لها زهرة ياسمين برية رائحتها تعطر الهواء.",
+        "قال لها الذئب بصوت هادئ عميق: 'يا ليلى، الطريق المختصر عبر الجدول أمن وأجمل لجدتكِ في هذا الوقت'. شكرم ليلى الذئب وتابعت طريقها وهي تستمتع بالنسمات العليلة، حتى وصلت بيت جدتها وقضيا معاً ليلة دافئة مليئة بالحكايات."
+      ]
     },
     {
-      title: "سباق الأرنب والسلحفاة والهدوء 🐢",
-      text: "في يوم صيفي دافئ، قرر الأرنب السريع والسلحفاة الهادئة القيام برحلة مشي بين المروج. كان الأرنب يركض متحمساً ثم يتعب، أما السلحفاة فكانت تمشي ببطء وثبات، تستمتع بكل خطوة وبأنفاس الهواء النقي. في نهاية المطاف، أدرك الأرنب أن السر ليس في السرعة والعجلة، بل في الهدوء والسلام الداخلي. استلقى الاثنان تحت ظلال شجرة كبيرة وناما على صوت نسيم الليل."
+      title: "سباق الأرنب والسلحفاة الحقيقي 🐢",
+      pages: [
+        "كان الأرنب 'سريع' يفخر دائماً بخفته وسرعته القاطعة، بينما كانت السلحفاة 'حكيمة' تسير ببطء شديد وتأمل كل زهرة وحصاة في طريقها. وفي يوم من أيام الربيع، اتفقا على إجراء مسابقة مشي نحو الشجرة الكبيرة.",
+        "انطلق الأرنب كالسهم وترك السلحفاة خلفه بمسافة طويلة. ولكن بدلاً من أن يركض دون توقف، شعر بالملل من العجلة، فقرر الاستلقاء تحت ظلال شجرة توت دافئة وقال في نفسه: 'لدي وقت طويل لأستريح'.",
+        "أما السلحفاة، فواصلت السير بخطواتها المنتظمة. لم تكن تفكر في الفوز بقدر ما كانت تستمتع بنسيم الرياح ورائحة الأعشاب الخضراء. كانت كل خطوة بالنسبة لها لحظة من السلام والهدوء.",
+        "عندما وصل الأرنب متأخراً بعد أن أخذ قيلولة طويلة، وجد السلحفاة تجلس عند الشجرة الكبيرة وابتسمت له قائلة: 'السر ليس في أن تصل أولاً يا صديقي، بل في أن تستمتع بالطريق دون إرهاق قلبك'."
+      ]
     },
     {
-      title: "الأمير وأميرة الأحلام 👑",
-      text: "كان هناك أمير يعيش في قصر بني على قمة جبل تحيط به الغيوم. كان يتمنى أن يجد شخصًا يفهم طيبة قلبه. وفي ليلة هادئة، رأى أميرة تجلس عند بحيرة الفضة تعزف لحنًا هادئاً يبعث السكينة. عندما اقترب منها، لم يتبادلا الكثير من الكلمات، بل اكتفيا بالنظر إلى النجوم المشعة. ومنذ تلك الليلة، أصبح كل منهما السند والأمان للآخر، يعيشان في سلام وحب لا ينتهي."
-    },
-    {
-      title: "سندريلا وحذاء الزجاج 👠",
-      text: "بعد يوم طويل من التعب، وقفت سندريلا في الشرفة تنظر إلى السماء وتتمنى أمئنية بسيطة: أن تجد الراحة والسلام. وفي الحفل الكبير، عندما التقت بالأمير، لم يبهره حذاؤها الزجاجي ولا فستانها اللامع، بل بهرته رقة قلبها وابتسامتها الصافية. وعندما دقت الساعة منتصف الليل، لم ينتهِ السحر، لأن الحب الحقيقي لا يختفي بزوال الزينة، وعاشا معاً في هدوء واستقرار."
-    },
-    {
-      title: "الأمير الصغير ونجمة الليل 🌟",
-      text: "سافر أمير صغير بين الكواكب بحثاً عن السر الذي يجعل الكائنات سعيدة. زار أشخاصاً كثيرين، لكنه لم يجد الإجابة إلا عندما التقى بنجمة صغيرة تضيء بنور خافت جداً. سألها: 'لماذا لا تضيئين بقوة؟'، فقالت: 'أنا أضيء فقط بالمقدار الذي يجعل من يراني يشعر بالهدوء وينام بسلام'. حينها فهم الأمير أن أجمل الأشياء في الحياة هي تلك التي تمنحنا السكينة دون ضجيج."
-    },
-    {
-      title: "قلعة الغيوم والوردة السحرية 🌹",
-      text: "في مملكة بعيدة فوق الغيوم، كانت هناك وردة سحرية لا تفتح أوراقها إلا عندما تستمع إلى حكاية حب صادقة. جاء أمير من بلاد المرج وأخذ يحكي للوردة عن أميرته وكيف يحميها ويحرص على سعادتها حتى في أصعب الأوقات. ومع كل كلمة حنونة، كانت أوراق الوردة تتفتح وتنشر عبقاً يتسبب في نوم عميق ومريح لكل من يشمه في القصر."
+      title: "قصر الأميرة ووردة النجوم 👑",
+      pages: [
+        "في مملكة شاسعة تقع فوق جبال الضباب، عاش أمير يملك كل شيء لكنه كان يبحث عن السكينة. سمع عن أميرة تعيش في قصر من الفضة، تحرس وردة فريدة لا تتفتح إلا عندما تعزف لها ألحاناً هادئة.",
+        "سافر الأمير أياماً طويلة عبر الوديان حتى وصل إلى القصر. هناك وجد الأميرة تجلس في شرفة القصر تحت سماء مليئة بالنجوم المضيئة، وتضع يدها على الوردة وتغني بصوت عذب يبعث الطمأنينة.",
+        "اقترب الأمير ببطء ولم ينطق بكلمة، بل أخرج ناي خشبياً صغيراً وبدأ يرافق عزفها بنغمات هادئة تشبه صوت المطر خفيف السقوط. وفي تلك اللحظة، بدأت أوراق الوردة تتفتح وتنشر ضياءً ذهبياً دافئاً حولهما.",
+        "منذ تلك الليلة، أدرك الأمير والأميرة أن الطمأنينة الحقيقية لا تأتي من الثراء أو القلاع، بل من وجود شخص يشاركك الهدوء والصمت قبل أن تشارك الكلام."
+      ]
     }
   ];
 
-  function getRandomStory() {
+  let currentStory = null;
+  let currentPageIndex = 0;
+
+  function loadRandomStory() {
     const randomIndex = Math.floor(Math.random() * stories.length);
-    const selected = stories[randomIndex];
-    
-    document.getElementById('storyTitle').innerText = selected.title;
-    document.getElementById('storyText').innerText = selected.text;
+    currentStory = stories[randomIndex];
+    currentPageIndex = 0;
+    updateUI();
   }
+
+  function changePage(direction) {
+    if (!currentStory) return;
+    currentPageIndex += direction;
+    updateUI();
+  }
+
+  function updateUI() {
+    document.getElementById('storyTitle').innerText = currentStory.title;
+    document.getElementById('storyText').innerText = currentStory.pages[currentPageIndex];
+    document.getElementById('pageIndicator').innerText = `الصفحة ${currentPageIndex + 1} من ${currentStory.pages.length}`;
+
+    // إعدادات الأزرار
+    document.getElementById('prevBtn').disabled = (currentPageIndex === 0);
+    document.getElementById('nextBtn').disabled = (currentPageIndex === currentStory.pages.length - 1);
+  }
+
+  // تحميل القصة الأولى تلقائياً عند فتح الصفحة
+  window.onload = loadRandomStory;
 </script>
 
 </body>
