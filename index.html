@@ -4,15 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>قصص الأقمار والنجوم 🌙</title>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
       --bg-color: #030712;
-      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-bg: rgba(17, 24, 39, 0.8);
       --text-glow: #fef08a;
       --accent-gold: #fbbf24;
-      --border-color: rgba(251, 191, 36, 0.2);
+      --border-color: rgba(251, 191, 36, 0.25);
+      --font-size: 22px;
+    }
+
+    body.super-dark {
+      --bg-color: #000000;
+      --card-bg: #050505;
+      --border-color: #222;
+      --text-glow: #d4d4d8;
+      --accent-gold: #a1a1aa;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
@@ -21,11 +30,10 @@
       background-color: var(--bg-color);
       background-image: 
         radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 40px 70px, #fbbf24, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 160px 120px, #fbbf24, rgba(0,0,0,0));
+        radial-gradient(2px 2px at 40px 70px, var(--accent-gold), rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0));
       background-repeat: repeat;
-      background-size: 250px 250px;
+      background-size: 200px 200px;
       color: #f3f4f6;
       min-height: 100vh;
       display: flex;
@@ -33,6 +41,7 @@
       justify-content: center;
       padding: 15px;
       direction: rtl;
+      transition: all 0.4s ease;
     }
 
     .container {
@@ -41,12 +50,11 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border-color);
       border-radius: 28px;
-      padding: 30px 24px;
-      max-width: 580px;
+      padding: 25px 20px;
+      max-width: 600px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 15px rgba(251, 191, 36, 0.1);
-      position: relative;
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
     }
 
     .top-bar {
@@ -54,106 +62,106 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .audio-btn {
+    .icon-btn {
       background: rgba(251, 191, 36, 0.1);
       border: 1px solid var(--border-color);
       color: var(--accent-gold);
-      padding: 6px 14px;
-      border-radius: 20px;
+      padding: 6px 12px;
+      border-radius: 12px;
       font-size: 13px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
 
-    .audio-btn:hover { background: var(--accent-gold); color: #000; }
+    .icon-btn:hover { background: var(--accent-gold); color: #000; }
 
-    .stars-header { font-size: 26px; letter-spacing: 4px; color: var(--accent-gold); }
-    
     .story-card {
       background: rgba(3, 7, 18, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 20px;
-      padding: 25px 20px;
-      margin: 20px 0;
-      min-height: 320px;
+      padding: 22px 18px;
+      margin: 15px 0;
+      min-height: 300px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
     .story-title {
-      font-size: 21px;
+      font-size: 20px;
       color: var(--accent-gold);
       font-weight: 700;
       border-bottom: 1px dashed var(--border-color);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
       margin-bottom: 15px;
     }
 
     .story-text {
       font-family: 'Amiri', serif;
-      font-size: 22px;
+      font-size: var(--font-size);
       line-height: 2;
       color: var(--text-glow);
-      text-shadow: 0 0 10px rgba(254, 240, 138, 0.3);
+      text-shadow: 0 0 8px rgba(254, 240, 138, 0.25);
       text-align: justify;
       text-align-last: center;
       margin-bottom: 15px;
+      transition: font-size 0.2s;
     }
 
-    .page-indicator {
-      font-size: 13px;
-      color: var(--accent-gold);
-      opacity: 0.85;
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      margin-bottom: 10px;
+      overflow: hidden;
     }
 
-    .controls {
-      display: flex;
-      gap: 12px;
-      justify-content: space-between;
-      margin-top: 10px;
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-gold);
+      width: 0%;
+      transition: width 0.3s ease;
     }
+
+    .page-indicator { font-size: 13px; color: var(--accent-gold); opacity: 0.8; }
+
+    .controls { display: flex; gap: 10px; justify-content: space-between; margin-top: 10px; }
 
     .btn {
       background: rgba(251, 191, 36, 0.12);
       color: var(--accent-gold);
       border: 1px solid var(--accent-gold);
-      padding: 12px 20px;
+      padding: 12px 18px;
       border-radius: 14px;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       flex: 1;
     }
 
-    .btn:hover:not(:disabled) {
-      background: var(--accent-gold);
-      color: #030712;
-      box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
-    }
-
-    .btn:disabled { opacity: 0.25; cursor: not-allowed; border-color: #4b5563; color: #4b5563; }
-
-    .btn-main {
-      background: var(--accent-gold);
-      color: #030712;
-      width: 100%;
-      margin-top: 12px;
-    }
+    .btn:hover:not(:disabled) { background: var(--accent-gold); color: #000; }
+    .btn:disabled { opacity: 0.2; cursor: not-allowed; border-color: #555; color: #555; }
+    .btn-main { background: var(--accent-gold); color: #000; width: 100%; margin-top: 10px; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <div class="top-bar">
-      <button class="audio-btn" id="audioToggle" onclick="toggleAudio()">🔊 صوت المطر: متوقف</button>
-      <div class="stars-header">✨ 🌙 ✨</div>
+      <button class="icon-btn" id="rainBtn" onclick="toggleRain()">🌧️ المطر: مغلق</button>
+      <button class="icon-btn" onclick="toggleSuperDark()">🕶️ وضع الظلام</button>
+      <div>
+        <button class="icon-btn" onclick="adjustFont(1)">A+</button>
+        <button class="icon-btn" onclick="adjustFont(-1)">A-</button>
+      </div>
     </div>
 
-    <h1 style="font-size: 18px; color: #9ca3af; font-weight: 500;">حكايات النوم لننوزة الكتكوتة</h1>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
     <div class="story-card">
       <div class="story-title" id="storyTitle">...</div>
@@ -168,9 +176,6 @@
 
     <button class="btn btn-main" onclick="loadRandomStory()">قصة جديدة 📖</button>
   </div>
-
-  <!-- صوت المطر الهادئ في الخلفية -->
-  <audio id="bgAudio" loop src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_849733c94a.mp3?filename=soft-rain-ambient-111154.mp3"></audio>
 
 <script>
   const stories = [
@@ -203,15 +208,49 @@
         "اقترب الأمير ببطء، وأخرج ناي خشبياً صغيراً وبدأ يرافق عزفها بنغمات هادئة تشبه صوت المطر خفيف السقوط. وفي تلك اللحظة، بدأت أوراق الوردة تتفتح وتنشر ضياءً ذهبياً دافئاً حولهما.",
         "منذ تلك الليلة، أدرك الأمير والأميرة أن الطمأنينة الحقيقية لا تأتي من القلاع العالية، بل من وجود شخص يشاركك الهدوء والصمت قبل أن تشارك الكلام."
       ]
+    },
+    {
+      id: 4,
+      title: "الأمير والوردة البيضاء 🤍",
+      pages: [
+        "في مملكة بعيدة، كان هناك أمير يقضي لياليه في العناية بحديقة قصر قُديمة. وكانت هناك وردة بيضاء واحدة لا تفتح أوراقها إلا مع ظهور أول نجمة في السماء.",
+        "كان الأمير يجلس جوارها كل مساء، يحكي لها عن تفاصيل يومه وعن حلمه بلقاء شخص يشاركه حب الهدوء والأشياء البسيطة. وكانت الوردة تتمايل مع كلماته كأنها تفهمه.",
+        "وفي ليلة اكتمال القمر، مرت بالحديقة فتاة غريبة عن القرية، تبحث عن ملجأ هادئ. عندما سمعت كلمات الأمير للوردة، ابتسمت وقالت له: 'الأشياء الجميلة لا تحتاج إلى ضجيج لتُلاحظ'.",
+        "ومنذ ذلك اليوم، لم يعد الأمير يتحدث للوردة بمفرده، بل أصبحا يجلسان معاً تحت ضوء القمر، يستمتعان بالهدوء الذي جمع بين قلبيهما."
+      ]
+    },
+    {
+      id: 5,
+      title: "بائع الفوانيس والقمر 🏮",
+      pages: [
+        "في بلدة صغيرة على ضفاف البحيرة، عاش عجوز يصنع فوانيس خشبية دافئة الضوء. لم يكن يبيعها بالمال، بل كان يهديلها لمن يحتاج نوراً يطمئن قلبه قبل النوم.",
+        "في إحدى الليالي المظلمة، جاءته طفلة صغيرة تخاف من ظلال الليل. أخذ العجوز فانوساً صغيراً ووضع فيه شمعة برائحة اللافندر الدافئة وقال لها: 'هذا الفانوس يحمل جزءاً من ضوء القمر'.",
+        "عندما أخذت الفتاة الفانوس إلى غرفتها، لم تنبعث منه إضاءة قوية تزعج عينيكِ، بل ضوء خافت وناعم يتراقص على الجدران برقة. وفي لحظات قليلة، شعرت بالدفء وأغمضت عينيها لتنام بسلام.",
+        "عادت البلدة كلها تعرف أن فوانيس العجوز ليست مجرد إضاءة، بل هي تعويذة هدوء وتذكير بأن الظلام دائماً يزول مع أول شعاع أمل."
+      ]
+    },
+    {
+      id: 6,
+      title: "أميرة المرج الوردي 🌸",
+      pages: [
+        "ورا جبال الضباب، كان هناك مرج واسع تتفتح فيه أزهار وردية لا تذبل أبداً. وكانت تعيش هناك أميرة تحب السير حافية القدمين على الأعشاب الندية كل مساء.",
+        "كانت تعزف على قيثارة صغيرة ألحاناً تشبه صوت النسمات الصيفية. وكانت الحيوانات الصغيرة تجمع حولها لتستمع إلى عزفها وتستعد للنوم.",
+        "وفي إحدى الليالي، جاء أمير مسافر تعب من رحلته الطويلة. عندما سمع عزفها، استلقى على الأعشاب الخضراء ووجد لأول مرة منذ سنوات الراحة التي كان يبحث عنها.",
+        "قال لها قبل أن يغفو: 'مملكتكِ ليست فيها قلاع أو حراس، لكنها أجمل مكان رأيته'. ابتسمت الأميرة وواصلت العزف حتى غطت النجوم السماء كلها بسلام."
+      ]
     }
   ];
 
   let currentStoryIndex = 0;
   let currentPageIndex = 0;
-  const audio = document.getElementById('bgAudio');
+  let currentFontSize = 22;
+  
+  // مولد صوت المطر برمجيًا (Web Audio API)
+  let audioCtx = null;
+  let isRainPlaying = false;
+  let noiseNode = null;
 
   function init() {
-    // استرجاع القصة والصفحة المحفوظة سابقاً
     const savedStory = localStorage.getItem('night_story_id');
     const savedPage = localStorage.getItem('night_story_page');
 
@@ -221,9 +260,6 @@
         currentStoryIndex = foundIndex;
         currentPageIndex = parseInt(savedPage);
       }
-    } else {
-      currentStoryIndex = 0;
-      currentPageIndex = 0;
     }
     updateUI();
   }
@@ -257,20 +293,64 @@
     document.getElementById('storyText').innerText = story.pages[currentPageIndex];
     document.getElementById('pageIndicator').innerText = `الصفحة ${currentPageIndex + 1} من ${story.pages.length}`;
 
+    const progress = ((currentPageIndex + 1) / story.pages.length) * 100;
+    document.getElementById('progressFill').style.width = `${progress}%`;
+
     document.getElementById('prevBtn').disabled = (currentPageIndex === 0);
     document.getElementById('nextBtn').disabled = (currentPageIndex === story.pages.length - 1);
   }
 
-  function toggleAudio() {
-    const btn = document.getElementById('audioToggle');
-    if (audio.paused) {
-      audio.play();
-      btn.innerText = "🔊 صوت المطر: يعمل";
+  function adjustFont(val) {
+    currentFontSize = Math.max(16, Math.min(32, currentFontSize + (val * 2)));
+    document.documentElement.style.setProperty('--font-size', `${currentFontSize}px`);
+  }
+
+  function toggleSuperDark() {
+    document.body.classList.toggle('super-dark');
+  }
+
+  // إنشاء صوت المطر عبر Web Audio API ليعمل على كافة الهواتف دون مشاكل
+  function toggleRain() {
+    const btn = document.getElementById('rainBtn');
+    if (!isRainPlaying) {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      
+      const bufferSize = audioCtx.sampleRate * 2;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      noiseNode = audioCtx.createBufferSource();
+      noiseNode.buffer = noiseBuffer;
+      noiseNode.loop = true;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 800; // تنعيم الصوت ليشبه المطر
+
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0.15; // مستوى صوت هادئ
+
+      noiseNode.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      noiseNode.start();
+      isRainPlaying = true;
+      btn.innerText = "🌧️ المطر: يعفمل";
       btn.style.background = "var(--accent-gold)";
       btn.style.color = "#000";
     } else {
-      audio.pause();
-      btn.innerText = "🔇 صوت المطر: متوقف";
+      if (noiseNode) {
+        noiseNode.stop();
+        noiseNode.disconnect();
+      }
+      isRainPlaying = false;
+      btn.innerText = "🌧️ المطر: مغلق";
       btn.style.background = "rgba(251, 191, 36, 0.1)";
       btn.style.color = "var(--accent-gold)";
     }
