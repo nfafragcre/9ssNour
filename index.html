@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مكتبة الهدوء والليالي الماطرة 📖🌙</title>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>مكتبة الهدوء والأجواء الماطرة 📖⛈️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -15,15 +15,6 @@
       --accent-gold: #f59e0b;
       --border-color: rgba(245, 158, 11, 0.2);
       --font-size: 20px;
-    }
-
-    body.super-dark {
-      --bg-color: #000000;
-      --card-bg: #080808;
-      --book-paper: #030303;
-      --text-color: #a1a1aa;
-      --accent-gold: #71717a;
-      --border-color: #27272a;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
@@ -37,38 +28,18 @@
       justify-content: center;
       padding: 20px;
       direction: rtl;
-      transition: background-color 0.4s ease;
-      overflow-x: hidden;
       position: relative;
+      overflow-x: hidden;
     }
 
     .lightning-flash {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.25);
       pointer-events: none;
       z-index: 999;
       opacity: 0;
-      transition: opacity 0.1s ease-out;
-    }
-
-    .sky-container {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 0; overflow: hidden;
-    }
-
-    .falling-item {
-      position: absolute; top: -30px;
-      color: var(--accent-gold); opacity: 0.4;
-      animation: fall linear infinite; user-select: none;
-    }
-
-    @keyframes fall {
-      0% { transform: translateY(-30px) rotate(0deg); opacity: 0; }
-      20% { opacity: 0.5; }
-      80% { opacity: 0.5; }
-      100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+      transition: opacity 0.05s ease-out;
     }
 
     .app-container {
@@ -97,7 +68,7 @@
 
     .audio-controls {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -105,15 +76,15 @@
     .sound-unit {
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 6px 10px;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 8px 12px;
       border-radius: 12px;
       border: 1px solid var(--border-color);
     }
 
     .volume-slider {
-      width: 55px;
+      width: 70px;
       accent-color: var(--accent-gold);
       cursor: pointer;
     }
@@ -122,9 +93,9 @@
       background: rgba(245, 158, 11, 0.1);
       border: 1px solid var(--border-color);
       color: var(--accent-gold);
-      padding: 8px 12px;
+      padding: 8px 14px;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -133,11 +104,6 @@
     .btn-action:hover, .btn-action.active {
       background: var(--accent-gold);
       color: #000;
-    }
-
-    select.btn-action {
-      outline: none;
-      background: var(--card-bg);
     }
 
     .books-grid {
@@ -153,34 +119,21 @@
       border-radius: 16px;
       padding: 25px 20px;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .book-card::before {
-      content: '';
-      position: absolute;
-      right: 0; top: 0; bottom: 0;
-      width: 6px;
-      background: var(--accent-gold);
-      opacity: 0.7;
+      gap: 10px;
     }
 
     .book-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-5px);
       border-color: var(--accent-gold);
-      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15);
     }
 
-    .book-emoji { font-size: 48px; }
-    .book-title { font-size: 17px; font-weight: 700; color: var(--accent-gold); }
-    .book-author { font-size: 12px; opacity: 0.6; }
+    .book-emoji { font-size: 40px; }
+    .book-title { font-size: 18px; font-weight: 700; color: var(--accent-gold); }
 
     .reader-view { display: none; }
 
@@ -188,14 +141,12 @@
       background: var(--book-paper);
       border: 1px solid var(--border-color);
       border-radius: 18px;
-      padding: 35px 30px;
+      padding: 30px;
       margin: 20px 0;
-      min-height: 420px;
+      min-height: 380px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
     }
 
     .book-header {
@@ -207,72 +158,45 @@
       margin-bottom: 20px;
     }
 
-    .book-header-title { font-size: 18px; font-weight: 700; color: var(--accent-gold); }
-
     .book-content {
       font-family: 'Amiri', serif;
       font-size: var(--font-size);
       line-height: 2.2;
-      color: var(--text-color);
       text-align: justify;
-      text-align-last: right;
-      margin-bottom: 20px;
-      transition: font-size 0.2s ease;
     }
 
-    .progress-bar-container {
+    .progress-bar {
       height: 4px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.1);
       border-radius: 2px;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       overflow: hidden;
     }
 
-    .progress-bar-fill {
+    .progress-fill {
       height: 100%;
       background: var(--accent-gold);
       width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .reader-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      opacity: 0.7;
+      transition: width 0.3s;
     }
 
     .navigation-controls {
       display: flex;
       gap: 12px;
-      margin-top: 15px;
     }
 
     .btn-nav {
       background: rgba(245, 158, 11, 0.15);
       color: var(--accent-gold);
       border: 1px solid var(--accent-gold);
-      padding: 12px 20px;
+      padding: 12px;
       border-radius: 12px;
-      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
       flex: 1;
     }
 
-    .btn-nav:hover:not(:disabled) {
-      background: var(--accent-gold);
-      color: #000;
-    }
-
-    .btn-nav:disabled {
-      opacity: 0.2;
-      cursor: not-allowed;
-      border-color: #444;
-      color: #444;
-    }
+    .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .btn-return {
       background: transparent;
@@ -283,79 +207,49 @@
       padding: 10px;
       border-radius: 12px;
       cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
     }
-
-    .btn-return:hover { background: rgba(255,255,255,0.05); }
   </style>
 </head>
 <body>
 
   <div class="lightning-flash" id="flash"></div>
-  <div class="sky-container" id="skyContainer"></div>
 
   <div class="app-container">
     <div class="control-panel">
       <div class="audio-controls">
         <div class="sound-unit">
-          <button class="btn-action" id="rainBtn" onclick="toggleAudio('rain')">🌧️ مطر</button>
-          <input type="range" class="volume-slider" id="rainVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolume('rain')">
+          <button class="btn-action" id="rainBtn" onclick="toggleRain()">🌧️ صوت المطر</button>
+          <input type="range" class="volume-slider" id="rainVol" min="0" max="1" step="0.05" value="0.5" oninput="setRainVolume(this.value)">
         </div>
 
         <div class="sound-unit">
-          <button class="btn-action" id="thunderBtn" onclick="toggleAudio('thunder')">⚡ رعد</button>
-          <input type="range" class="volume-slider" id="thunderVol" min="0" max="1" step="0.05" value="0.6" oninput="updateVolume('thunder')">
-        </div>
-
-        <div class="sound-unit">
-          <button class="btn-action" id="windBtn" onclick="toggleAudio('wind')">🍃 رياح</button>
-          <input type="range" class="volume-slider" id="windVol" min="0" max="1" step="0.05" value="0.4" oninput="updateVolume('wind')">
-        </div>
-
-        <div class="sound-unit">
-          <button class="btn-action" id="fireBtn" onclick="toggleAudio('fire')">🪵 موقد</button>
-          <input type="range" class="volume-slider" id="fireVol" min="0" max="1" step="0.05" value="0.5" oninput="updateVolume('fire')">
+          <button class="btn-action" id="thunderBtn" onclick="playThunder()">⚡ صاعقة رعد</button>
         </div>
       </div>
 
       <div class="audio-controls">
-        <select class="btn-action" id="timerSelect" onchange="setSleepTimer()">
-          <option value="0">⏱️ المؤقت</option>
-          <option value="15">15 دقيقة</option>
-          <option value="30">30 دقيقة</option>
-          <option value="60">60 دقيقة</option>
-        </select>
-
-        <button class="btn-action" onclick="toggleSuperDark()">🕶️ داكن</button>
         <button class="btn-action" onclick="adjustFont(1)">A+</button>
         <button class="btn-action" onclick="adjustFont(-1)">A-</button>
       </div>
     </div>
 
     <div id="booksView">
-      <h2 style="color: var(--accent-gold); margin-bottom: 8px; font-weight: 700;">المكتبة الليلية 📚</h2>
-      <p style="opacity: 0.6; font-size: 14px; margin-bottom: 20px;">اختر كتاباً للقراءة مع أصوات الطبيعة المباشرة</p>
+      <h2 style="color: var(--accent-gold); margin-bottom: 10px;">المكتبة الماطرة 📚</h2>
       <div class="books-grid" id="booksContainer"></div>
     </div>
 
     <div id="readerView" class="reader-view">
-      <div class="progress-bar-container">
-        <div class="progress-bar-fill" id="progressFill"></div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
       </div>
 
       <div class="book-frame">
         <div class="book-header">
-          <span class="book-header-title" id="bookTitle">...</span>
-          <button class="btn-action" onclick="copyCurrentPage()">📋 نسخ الصفحة</button>
+          <span id="bookTitle" style="color: var(--accent-gold); font-weight: bold;"></span>
+          <span id="pageIndicator" style="opacity: 0.7;"></span>
         </div>
         
-        <div class="book-content" id="bookContent">...</div>
-        
-        <div class="reader-footer">
-          <span id="authorName">...</span>
-          <span id="pageIndicator">الصفحة 0 من 0</span>
-        </div>
+        <div class="book-content" id="bookContent"></div>
       </div>
 
       <div class="navigation-controls">
@@ -363,65 +257,32 @@
         <button class="btn-nav" id="nextBtn" onclick="changePage(1)">الصفحة التالية ⬅</button>
       </div>
 
-      <button class="btn-return" onclick="showBooksGrid()">العودة لرفوف الكتب 📖</button>
+      <button class="btn-return" onclick="showBooksGrid()">العودة للمكتبة 📖</button>
     </div>
   </div>
 
 <script>
   const library = [
     {
-      id: 1,
-      title: "الأمير الصغير",
-      author: "أنطوان دي سانت إكزوبيري",
+      title: "قصة الأمير الصغير (كاملة)",
       emoji: "🦊",
       pages: [
-        "طلب مني الأمير الصغير رسم خروف. ولما لم أكن قد رسمت في حياتي سوى ثعبان البوا من الخارج ومن الداخل، أعدت رسم إحدى اللوحتين اللتين كنت أتقنهما: ثعبان البوا المغلق. وصدمت عندما سمعت الفتى الصغير يقول: 'لا! لا! لا أريد فيلاً داخل ثعبان بوا! الثعبان خطير جداً، والفيل ضخم للغاية. بيتي صغير جداً، وأنا بحاجة إلى خروف. ارسم لي خروفاً'.",
-        "عدت إلى الرسم من جديد، لكنه رفضه كسابقيه: 'هذا كبير السن، وأنا أريد خروفاً يعيش طويلاً'. ولما نفد صبري، خربشت هذا الرسم على السريع، وقلت له: 'هذا هو الصندوق. والخروف الذي تطلبه موجود بالداخل'. وكم كانت مفاجأتي عظيمة عندما رأيت وجه قاضيي الصغير يضيء بابتهاج."
+        "طلب مني الأمير الصغير رسم خروف. ولما لم أكن قد رسمت في حياتي سوى ثعبان البوا من الخارج ومن الداخل، أعدت رسم إحدى اللوحتين اللتين كنت أتقنهما: ثعبان البوا المغلق. وصدمت عندما سمعت الفتى الصغير يقول: 'لا! لا! لا أريد فيلاً داخل ثعبان بوا! الثعبان خطير جداً، والفيل ضخم للغاية. بيتي صغير جداً، وأنا بحاجة إلى خروف'.",
+        "عدت إلى الرسم من جديد، لكنه رفضه كسابقيه: 'هذا كبير السن، وأنا أريد خروفاً يعيش طويلاً'. ولما نفد صبري، خربشت رسم الصندوق، وقلت له: 'هذا هو الصندوق. والخروف الذي تطلبه موجود بالداخل'. وكم كانت مفاجأتي عظيمة عندما رأيت وجه قاضيي الصغير يضيء بابتهاج.",
+        "وهكذا تعارفت على الأمير الصغير. علمت منه أنه ينتمي لكوكب صغير جداً لا يتعدى حجم البيت. وكان على كوكبه بذور ضارة هي بذور شجر 'الباوباب'، إذا لم يتم اقتلاعها فور ظهورها تنمو وتستفحل حتى تمزق الكوكب بأكمله بجذورها.",
+        "في اليوم الرابع، علمت شغفه برؤية غروب الشمس. قال لي: 'تعلم أنني أحب غروب الشمس كثيراً، تعال بنا نذهب لنشاهد الغروب'. فقلت له: 'علينا أن ننتظر حتى تحين اللحظة'. فاستغرب في البداية ثم ضحك من نفسه، وقال: 'أنا دائماً أحسب أنني في دياري!'.",
+        "وكانت هناك وردة فريدة على كوكبه، اعتنى بها كثيراً، لكنها كانت مغرورة ومتطلبة، مما جعل الأمير الصغير يقرر المغادرة واستكشاف الكواكب المجاورة بحثاً عن المعرفة وعن أصدقاء حقيقيين يدركون معنى الوفاء."
       ]
     },
     {
-      id: 2,
-      title: "النبي",
-      author: "جبران خليل جبران",
-      emoji: "📜",
-      pages: [
-        "المصطفى، المختار والحبيب، الذي كان فجراً لنهاره الخاص، كان قد انتظر اثنتي عشرة سنة في مدينة أورفاليس مجيء سفينته التي ترجعه إلى الجزيرة التي ولد فيها. وفي السنة الاثنتي عشرة، حصاد الشهر، صعد إلى التل خارج أسوار المدينة وتطلع نحو البحر؛ فرأى سفينته تقبل مع الضباب."
-      ]
-    },
-    {
-      id: 3,
-      title: "الشيخ والبحر",
-      author: "إرنست همنغواي",
+      title: "الشيخ والبحر (رحلة الصيد)",
       emoji: "⛵",
       pages: [
-        "كان شيخاً يصطاد السمك بمفرده في قارب صغير بـ 'جلف ستريم'، ومضى عليه الآن أربعة وثمانون يوماً دون أن يظفر بسمكة واحدة. وفي الأربعين يوماً الأولى، كان يرافقه صبي. ولكن بعد أربعين يوماً بلا سمك، قال أبوا الصبي لولدهما إن الشيخ أصبح بلا شك 'سالاو'، وهي أتعس صور الحظ السيء."
-      ]
-    },
-    {
-      id: 4,
-      title: "رسائل إلى شاعر شاب",
-      author: "راينر ماريا ريلكه",
-      emoji: "✉️",
-      pages: [
-        "ابحث في أعماق نفسك عن السبب الذي يدعوك للكتابة؛ افحص ما إذا كانت جذوره تمتد إلى أعمق أركان قلبك، واعترافك لنفسك بما إذا كنت ستضطر إلى الموت إذا حُظر عليك الكتابة. هذا وقبل كل شيء: اسأل نفسك في أكثر ساعات ليلك هدوءاً: هل يجب عليّ أن أكتب؟"
-      ]
-    },
-    {
-      id: 5,
-      title: "الليالي البيضاء",
-      author: "فيودور دوستويفسكي",
-      emoji: "🌌",
-      pages: [
-        "كانت ليلة ساحرة، ليلة لا يمكن أن تكون إلا وأنت شاب يا عزيزي القارئ! كانت السماء مرصعة بالنجوم، ساطعة جداً، بحيث إنك إذا تطلعت إليها لا بد أن تسأل نفسك: أيمكن تحت مثل هذه السماء أن يعيش مختلف أنواع الناس الغاضبين والمتقلبين؟"
-      ]
-    },
-    {
-      id: 6,
-      title: "ألف ليلة وليلة",
-      author: "تراث حكايات",
-      emoji: "🏺",
-      pages: [
-        "بلغني أيها الملك السعيد ذو الرأي الرشيد، أنه كان في قديم الزمان وسالف العصر والأوان، ملك من ملوك ساسان يحب القصص والاستماع إلى نوادر الأخبار، وكانت شهرزاد تجلس بين يديه مع بزوغ كل فجر لتروي له ما أذهل العقول وخَلَب الألباب."
+        "كان شيخاً يصطاد السمك بمفرده في قارب صغير بـ 'جلف ستريم'، ومضى عليه الآن أربعة وثمانون يوماً دون أن يظفر بسمكة واحدة. وفي الأربعين يوماً الأولى، كان يرافقه صبي، لكن والديه منعاه من الذهاب مع هذا الشيخ النحس.",
+        "في اليوم الخامس والثمانين، قرر الشيخ سانتياغو أن يبحر بعيداً جداً عن الشاطئ، وتجاوز الحدود التي يجرؤ باقي الصيادين على الوصول إليها. ألقى بشباكه وطعمه في المياه العميقة وانتظر بالصبر الذي علمه إياه البحر.",
+        "وفجأة، شعرت يداه بضغط شديد على الخيط. كانت سمكة 'مارلين' ضخمة جداً أكلت الطعم. لم يستطع سحبها، بل إن السمكة هي التي بدأت بسحب القارب الصغير خلفها نحو عرض المحيط.",
+        "استمر الصراع يوماً وليلة كامليين، يدا الشيخ تنزفان وجسده مجهد، لكنه رفض الاستسلام. كان يخاطب السمكة باحترام قائلاً: 'أنا أحبك وأحترمك جداً، ولكنني سأقتلك قبل أن ينتهي هذا اليوم'.",
+        "أخيراً، نجح الشيخ في ربط السمكة الضخمة بجانب القارب. لكن رحلة العودة كانت المأساة الحقيقية، حيث انجذبت أسماك القرش لرائحة الدم، وبدأ الشيخ يخوض معركة جديدة لل any عن صيده حتى وصل الشاطئ ولم يتبقَ من السمكة سوى هيكلها العظمي."
       ]
     }
   ];
@@ -429,140 +290,98 @@
   let currentBookIndex = 0;
   let currentPageIndex = 0;
   let currentFontSize = 20;
-  let sleepTimerTimeout = null;
 
-  // توليد أصوات طبيعية داخلية عبر Web Audio API
+  // محاكي صوت المطر والرعد عبر Web Audio API (توليد حي بدون روابط)
   let audioCtx = null;
-  const activeNodes = {};
+  let rainNode = null;
+  let rainGain = null;
+  let isRainPlaying = false;
 
-  function getAudioContext() {
+  function initAudio() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-    return audioCtx;
   }
 
-  function createNoiseNode(ctx) {
-    const bufferSize = ctx.sampleRate * 2;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const output = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      output[i] = Math.random() * 2 - 1;
-    }
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
-    noise.loop = true;
-    return noise;
-  }
+  function toggleRain() {
+    initAudio();
+    const btn = document.getElementById('rainBtn');
 
-  function startSound(type) {
-    const ctx = getAudioContext();
-    const gainNode = ctx.createGain();
-    const volInput = document.getElementById(`${type}Vol`);
-    gainNode.gain.value = parseFloat(volInput.value);
-    gainNode.connect(ctx.destination);
+    if (!isRainPlaying) {
+      // إنشاء ضوضاء وردية تشبه المطر تماماً
+      const bufferSize = audioCtx.sampleRate * 2;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
 
-    if (type === 'rain') {
-      const noise = createNoiseNode(ctx);
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 1000;
-      noise.connect(filter);
-      filter.connect(gainNode);
-      noise.start();
-      activeNodes[type] = { source: noise, gain: gainNode };
-    } 
-    else if (type === 'wind') {
-      const noise = createNoiseNode(ctx);
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 400;
-      filter.Q.value = 3.0;
-      
-      // محاكاة تموج الرياح
-      const lfo = ctx.createOscillator();
-      lfo.frequency.value = 0.2;
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.value = 300;
-      lfo.connect(lfoGain);
-      lfoGain.connect(filter.frequency);
-      lfo.start();
+      for (let i = 0; i < bufferSize; i++) {
+        let white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+        data[i] *= 0.11;
+        b6 = white * 0.115926;
+      }
 
-      noise.connect(filter);
-      filter.connect(gainNode);
-      noise.start();
-      activeNodes[type] = { source: noise, lfo: lfo, gain: gainNode };
-    } 
-    else if (type === 'fire') {
-      const noise = createNoiseNode(ctx);
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 800;
-      noise.connect(filter);
-      filter.connect(gainNode);
-      noise.start();
-      activeNodes[type] = { source: noise, gain: gainNode };
-    } 
-    else if (type === 'thunder') {
-      const noise = createNoiseNode(ctx);
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 120;
-      
-      // مظلة انخفاض صوت الرعد التدريجي
-      gainNode.gain.setValueAtTime(parseFloat(volInput.value), ctx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3);
+      rainNode = audioCtx.createBufferSource();
+      rainNode.buffer = buffer;
+      rainNode.loop = true;
 
-      noise.connect(filter);
-      filter.connect(gainNode);
-      noise.start();
-      noise.stop(ctx.currentTime + 3);
+      rainGain = audioCtx.createGain();
+      const vol = document.getElementById('rainVol').value;
+      rainGain.gain.setValueAtTime(vol * 0.2, audioCtx.currentTime);
 
-      triggerLightningFlash();
-      activeNodes[type] = { source: noise, gain: gainNode };
-      
-      setTimeout(() => {
-        document.getElementById('thunderBtn').classList.remove('active');
-        delete activeNodes['thunder'];
-      }, 3000);
-    }
-  }
+      rainNode.connect(rainGain);
+      rainGain.connect(audioCtx.destination);
+      rainNode.start();
 
-  function stopSound(type) {
-    if (activeNodes[type]) {
-      if (activeNodes[type].source) activeNodes[type].source.stop();
-      if (activeNodes[type].lfo) activeNodes[type].lfo.stop();
-      delete activeNodes[type];
-    }
-  }
-
-  function toggleAudio(type) {
-    const btn = document.getElementById(`${type}Btn`);
-    if (activeNodes[type]) {
-      stopSound(type);
-      btn.classList.remove('active');
-    } else {
-      startSound(type);
+      isRainPlaying = true;
       btn.classList.add('active');
+    } else {
+      rainNode.stop();
+      isRainPlaying = false;
+      btn.classList.remove('active');
     }
   }
 
-  function updateVolume(type) {
-    if (activeNodes[type] && activeNodes[type].gain) {
-      const volInput = document.getElementById(`${type}Vol`);
-      activeNodes[type].gain.gain.value = parseFloat(volInput.value);
+  function setRainVolume(val) {
+    if (rainGain && audioCtx) {
+      rainGain.gain.setValueAtTime(val * 0.2, audioCtx.currentTime);
     }
   }
 
-  function init() {
-    renderBooksGrid();
-    createFallingSky();
+  function playThunder() {
+    initAudio();
+    // إضاءة فلاش البرق
+    const flash = document.getElementById('flash');
+    flash.style.opacity = '1';
+    setTimeout(() => { flash.style.opacity = '0'; }, 80);
+    setTimeout(() => { flash.style.opacity = '0.6'; }, 150);
+    setTimeout(() => { flash.style.opacity = '0'; }, 250);
+
+    // توليد صوت دوي الرعد البرمجي العميق
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(60, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 1.5);
+
+    gain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.8);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 1.8);
   }
 
-  function renderBooksGrid() {
+  function renderBooks() {
     const container = document.getElementById('booksContainer');
     container.innerHTML = '';
     library.forEach((book, idx) => {
@@ -572,18 +391,18 @@
       card.innerHTML = `
         <div class="book-emoji">${book.emoji}</div>
         <div class="book-title">${book.title}</div>
-        <div class="book-author">${book.author}</div>
+        <div style="font-size:12px; opacity:0.6;">عدد الصفحات: ${book.pages.length}</div>
       `;
       container.appendChild(card);
     });
   }
 
-  function openBook(index) {
-    currentBookIndex = index;
+  function openBook(idx) {
+    currentBookIndex = idx;
     currentPageIndex = 0;
     document.getElementById('booksView').style.display = 'none';
     document.getElementById('readerView').style.display = 'block';
-    updateReaderUI();
+    updateReader();
   }
 
   function showBooksGrid() {
@@ -591,10 +410,9 @@
     document.getElementById('booksView').style.display = 'block';
   }
 
-  function updateReaderUI() {
+  function updateReader() {
     const book = library[currentBookIndex];
     document.getElementById('bookTitle').innerText = `${book.emoji} ${book.title}`;
-    document.getElementById('authorName').innerText = `الكاتب: ${book.author}`;
     document.getElementById('bookContent').innerText = book.pages[currentPageIndex];
     document.getElementById('pageIndicator').innerText = `الصفحة ${currentPageIndex + 1} من ${book.pages.length}`;
 
@@ -605,52 +423,9 @@
     document.getElementById('nextBtn').disabled = (currentPageIndex === book.pages.length - 1);
   }
 
-  function changePage(direction) {
-    currentPageIndex += direction;
-    updateReaderUI();
-  }
-
-  function createFallingSky() {
-    const sky = document.getElementById('skyContainer');
-    const symbols = ['🌙', '⭐', '✨', '💫'];
-    for (let i = 0; i < 20; i++) {
-      const item = document.createElement('div');
-      item.className = 'falling-item';
-      item.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-      item.style.left = `${Math.random() * 100}%`;
-      item.style.fontSize = `${Math.random() * 10 + 12}px`;
-      item.style.animationDuration = `${Math.random() * 10 + 8}s`;
-      item.style.animationDelay = `${Math.random() * 5}s`;
-      sky.appendChild(item);
-    }
-  }
-
-  function triggerLightningFlash() {
-    const flash = document.getElementById('flash');
-    flash.style.opacity = '1';
-    setTimeout(() => { flash.style.opacity = '0'; }, 120);
-  }
-
-  function setSleepTimer() {
-    if (sleepTimerTimeout) clearTimeout(sleepTimerTimeout);
-    const minutes = parseInt(document.getElementById('timerSelect').value);
-    
-    if (minutes > 0) {
-      sleepTimerTimeout = setTimeout(() => {
-        Object.keys(activeNodes).forEach(type => {
-          stopSound(type);
-          document.getElementById(`${type}Btn`).classList.remove('active');
-        });
-        document.getElementById('timerSelect').value = "0";
-      }, minutes * 60 * 1000);
-    }
-  }
-
-  function copyCurrentPage() {
-    const text = document.getElementById('bookContent').innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      alert("تم نسخ الصفحة الحالية لحافظة جهازك.");
-    });
+  function changePage(dir) {
+    currentPageIndex += dir;
+    updateReader();
   }
 
   function adjustFont(val) {
@@ -658,12 +433,7 @@
     document.documentElement.style.setProperty('--font-size', `${currentFontSize}px`);
   }
 
-  function toggleSuperDark() {
-    document.body.classList.toggle('super-dark');
-  }
-
-  window.onload = init;
+  window.onload = renderBooks;
 </script>
-
 </body>
 </html>
